@@ -4,8 +4,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("NEON_URL")
+  url      = env("DATABASE_URL")
 }
+
+// todo prisma generate
 
 model User {
   id                String            @id @default(uuid())
@@ -14,23 +16,23 @@ model User {
   email             String            @unique
   passwordHash      String
   createdAt         DateTime          @default(now())
-  emailConfirmation EmailConfirmation?
-  passwordRecovery  PasswordRecovery?
+  // emailConfirmation EmailConfirmation?
+  // passwordRecovery  PasswordRecovery?
 }
 
-model EmailConfirmation {
-  confirmationCode String @unique
-  expirationDate   DateTime
-  isConfirmed      Boolean @default(false)
-  user             User    @relation(fields: [userId], references: [id])
-  userId           String @unique
-}
-
-model PasswordRecovery {
-  email        String @unique
-  recoveryCode String
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String @unique
-}
+// model EmailConfirmation {
+//   confirmationCode String @unique
+//   expirationDate   DateTime
+//   isConfirmed      Boolean @default(false)
+//   user             User    @relation(fields: [userId], references: [id])
+//   userId           String @unique
+// }
+//
+// model PasswordRecovery {
+//   email        String @unique
+//   recoveryCode String
+//   user         User   @relation(fields: [userId], references: [id])
+//   userId       String @unique
+// }
 
 // todo nest g resource 'name' - command for create new (controller, service, repo)
