@@ -8,10 +8,19 @@ datasource db {
 }
 
 model User {
-id Int @id @default(autoincrement())
-email String
-name String
+  id                String   @id @default(uuid())
+  name              String
+  login             String   @unique
+  email             String   @unique
+  passwordHash      String
+  createdAt         DateTime @default(now())
+  emailConfirmation
+}
+
+model EmailConfirmation {
+  confirmationCode String
+  expirationDate   Date
+  isConfirmed      Boolean @default(false)
 }
 
 // todo nest g resource 'name' - command for create new (controller, service, repo)
-
