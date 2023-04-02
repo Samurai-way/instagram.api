@@ -12,9 +12,17 @@ import { EmailService } from './modules/email/email.service';
 import { EmailRepository } from './modules/email/email.repository';
 import { UsersController } from './modules/users/users.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AuthService } from './modules/auth/auth.service';
+import { GoogleStrategy } from './modules/auth/google/strategy/google.strategy';
 
 const useCases = [RegistrationUseCase];
-const services = [AppService, PrismaService, EmailService];
+const services = [
+  AppService,
+  PrismaService,
+  EmailService,
+  AuthService,
+  GoogleStrategy,
+];
 const repositories = [AuthRepository, UsersRepository, EmailRepository];
 const controllers = [AppController, AuthController, UsersController];
 
