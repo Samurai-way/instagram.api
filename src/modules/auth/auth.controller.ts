@@ -1,12 +1,15 @@
-import { Body, Controller, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { AuthDto } from './dto/auth.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegistrationCommand } from './use-cases/registration-use.case';
 
 @Controller('auth')
-export class AuthController{
-  constructor() {}
+export class AuthController {
+  constructor(private commandBus: CommandBus) {}
 
   @Post('registration')
-  @HttpStatus(204)
-  async registration(@Body() dto: ){
-
+  @HttpCode(204)
+  async registration(@Body() dto: AuthDto): Promise<boolean> {
+    return this.commandBus.execute(new RegistrationCommand(dto));
   }
 }
