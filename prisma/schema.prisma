@@ -8,19 +8,29 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(uuid())
+  id                String            @id @default(uuid())
   name              String
-  login             String   @unique
-  email             String   @unique
+  login             String            @unique
+  email             String            @unique
   passwordHash      String
-  createdAt         DateTime @default(now())
-  emailConfirmation
+  createdAt         DateTime          @default(now())
+  emailConfirmation EmailConfirmation?
+  passwordRecovery  PasswordRecovery?
 }
 
 model EmailConfirmation {
-  confirmationCode String
-  expirationDate   Date
+  confirmationCode String @unique
+  expirationDate   DateTime
   isConfirmed      Boolean @default(false)
+  user             User    @relation(fields: [userId], references: [id])
+  userId           String @unique
+}
+
+model PasswordRecovery {
+  email        String @unique
+  recoveryCode String
+  user         User   @relation(fields: [userId], references: [id])
+  userId       String @unique
 }
 
 // todo nest g resource 'name' - command for create new (controller, service, repo)
