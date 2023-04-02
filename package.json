@@ -11,6 +11,8 @@
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=develop nest start --watch",
     "start:debug": "nest start --debug --watch",
+    "prizma:migrate": "npx prisma migrate dev init",
+    "db:local": "npx prisma studio",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
