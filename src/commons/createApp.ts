@@ -8,6 +8,7 @@ import { AppModule } from '../app.module';
 import { HttpExceptionFilter } from './exceptionFilter';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 export const createApp = (app: INestApplication): INestApplication => {
   const config = new DocumentBuilder()
@@ -20,6 +21,7 @@ export const createApp = (app: INestApplication): INestApplication => {
   SwaggerModule.setup('/api/docs', app, document);
   app.setGlobalPrefix('api');
   app.enableCors();
+  // app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new ValidationPipe({

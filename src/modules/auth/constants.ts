@@ -8,3 +8,12 @@ export class JwtPairType {
 export class loginOrEmailType {
   constructor(public loginOrEmail: string, public password: string) {}
 }
+
+export class TokensVerifyViewModal {
+  constructor(
+    public userId: string,
+    public deviceId: string,
+    public iat: number,
+    public exp: number,
+  ) {}
+}

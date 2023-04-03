@@ -22,12 +22,14 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { LocalStrategy } from './modules/auth/strategies/local.strategy';
 import { JWT } from './modules/auth/constants';
 import { UsersService } from './modules/users/service/users.service';
+import { LogoutUseCase } from './modules/auth/use-cases/logout.use-case';
 
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
   EmailResendingUseCase,
   LoginUseCase,
+  LogoutUseCase,
 ];
 const services = [
   AppService,

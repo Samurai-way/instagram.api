@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JWT, JwtPairType } from '../constants';
-
+import { JWT, JwtPairType, TokensVerifyViewModal } from '../constants';
+import jwt from 'jsonwebtoken';
 @Injectable()
 export class AuthService {
   constructor(public jwtService: JwtService) {}
@@ -28,5 +28,17 @@ export class AuthService {
       }),
     };
     return jwtPair;
+  }
+  getLastActiveDateFromRefreshToken(refreshToken: string): string {
+    const payload: any = jwt.decode(refreshToken);
+    return new Date(payload.iat * 1000).toISOString();
+  }
+  async tokenVerify(token: string): Promise<TokensVerifyViewModal> {
+    try {
+      const result: any = jwt.verify(token, JWT.jwt_secret);
+      return result;
+    } catch (error) {
+      return null;
+    }
   }
 }

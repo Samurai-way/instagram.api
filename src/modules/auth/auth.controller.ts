@@ -22,6 +22,7 @@ import { LoginCommand } from './use-cases/login.use-case';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { UserModel } from '../users/types/types';
 import { Cookies } from './decorator/cookies.decorator';
+import { LogoutCommand } from './use-cases/logout.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -77,8 +78,8 @@ export class AuthController {
       new LoginCommand(ip, title, user),
     );
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
+      httpOnly: false,
+      secure: false,
     });
     return { accessToken: accessToken };
   }
@@ -86,6 +87,16 @@ export class AuthController {
   @Post('/logout')
   @HttpCode(204)
   async userLogout(@Cookies() cookies): Promise<boolean> {
+    console.log(cookies.refreshToken);
     return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Get('/me')
+  async getUser(
+    @User() user: UserModel,
+  ): Promise<{ email: string; login: string; userId: string }> {
+    console.log('user', user);
+    return { email: user.email, login: user.login, userId: user.id };
   }
 }
