@@ -18,6 +18,10 @@ import { ConfirmationUseCase } from './modules/auth/use-cases/confirmation.use-c
 import { TestingController } from './modules/testing/testing.controller';
 import { EmailResendingUseCase } from './modules/auth/use-cases/emailResending.use-case';
 import { LoginUseCase } from './modules/auth/use-cases/login.use-case';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { LocalStrategy } from './modules/auth/strategies/local.strategy';
+import { JWT } from './modules/auth/constants';
+import { UsersService } from './modules/users/service/users.service';
 
 const useCases = [
   RegistrationUseCase,
@@ -31,6 +35,8 @@ const services = [
   EmailService,
   AuthService,
   GoogleStrategy,
+  JwtService,
+  UsersService,
 ];
 const repositories = [AuthRepository, UsersRepository, EmailRepository];
 const controllers = [
@@ -46,6 +52,10 @@ const controllers = [
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
     }),
+    JwtModule.register({
+      secret: JWT.jwt_secret,
+      signOptions: { expiresIn: '600s' },
+    }),
     MailerModule.forRoot({
       transport: {
         service: 'gmail',
@@ -57,6 +67,6 @@ const controllers = [
     }),
   ],
   controllers,
-  providers: [...useCases, ...services, ...repositories],
+  providers: [...useCases, ...services, ...repositories, LocalStrategy],
 })
 export class AppModule {}

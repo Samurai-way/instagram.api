@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { User } from '@prisma/client';
+import { AuthService } from '../service/auth.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class LoginCommand {
@@ -13,7 +15,12 @@ export class LoginCommand {
 
 @CommandHandler(LoginCommand)
 export class LoginUseCase implements ICommand {
-  constructor() {}
+  constructor(public authService: AuthService) {}
 
-  async execute(command: LoginCommand) {}
+  async execute(
+    command: LoginCommand,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const deviceId = randomUUID();
+    return this.authService.createJwtPair(command.user.id, deviceId);
+  }
 }

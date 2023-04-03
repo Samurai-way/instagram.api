@@ -19,8 +19,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       loginOrEmail,
       password,
     );
-    if (user.banInfo.isBanned)
-      throw new UnauthorizedException(['User is banned']);
+    // if (user.banInfo.isBanned)
+    //   throw new UnauthorizedException(['User is banned']);
     if (!user) throw new NotFoundException([]);
     return user;
   }
