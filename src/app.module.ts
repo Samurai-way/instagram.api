@@ -16,8 +16,13 @@ import { AuthService } from './modules/auth/service/auth.service';
 import { GoogleStrategy } from './modules/auth/google/strategy/google.strategy';
 import { ConfirmationUseCase } from './modules/auth/use-cases/confirmation.use-case';
 import { TestingController } from './modules/testing/testing.controller';
+import { EmailResendingUseCase } from './modules/auth/use-cases/emailResending.use-case';
 
-const useCases = [RegistrationUseCase, ConfirmationUseCase];
+const useCases = [
+  RegistrationUseCase,
+  ConfirmationUseCase,
+  EmailResendingUseCase,
+];
 const services = [
   AppService,
   PrismaService,

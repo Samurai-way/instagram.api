@@ -44,4 +44,9 @@ export class AuthController {
   ): Promise<EmailConfirmation> {
     return this.commandBus.execute(new ConfirmationCommand(code));
   }
+  @Post('/registration-email-resending')
+  @HttpCode(204)
+  async registrationEmailResending(@Body('email') email: string): Promise<any> {
+    // return this.commandBus.execute(new EmailResendingCommand(email));
+  }
 }
