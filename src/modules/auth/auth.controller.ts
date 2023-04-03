@@ -14,6 +14,7 @@ import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { AuthService } from './service/auth.service';
 import { ConfirmationCommand } from './use-cases/confirmation.use-case';
 import { EmailConfirmation } from '@prisma/client';
+import { EmailResendingCommand } from './use-cases/emailResending.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -46,7 +47,9 @@ export class AuthController {
   }
   @Post('/registration-email-resending')
   @HttpCode(204)
-  async registrationEmailResending(@Body('email') email: string): Promise<any> {
-    // return this.commandBus.execute(new EmailResendingCommand(email));
+  async registrationEmailResending(
+    @Body('email') email: string,
+  ): Promise<boolean> {
+    return this.commandBus.execute(new EmailResendingCommand(email));
   }
 }

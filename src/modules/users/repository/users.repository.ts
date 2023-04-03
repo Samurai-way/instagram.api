@@ -45,6 +45,7 @@ export class UsersRepository {
       where: {
         email: email,
       },
+      include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
 
@@ -73,6 +74,15 @@ export class UsersRepository {
     return this.prisma.emailConfirmation.update({
       where: { confirmationCode: code },
       data: { isConfirmed: true },
+    });
+  }
+  async updateEmailConfirmationConfirmationCode(
+    newCode: string,
+    oldCode: string,
+  ): Promise<EmailConfirmation> {
+    return this.prisma.emailConfirmation.update({
+      where: { confirmationCode: oldCode },
+      data: { confirmationCode: newCode },
     });
   }
 }

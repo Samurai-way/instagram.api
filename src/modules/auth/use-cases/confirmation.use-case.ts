@@ -18,7 +18,6 @@ export class ConfirmationUseCase implements ICommand {
       throw new BadRequestException([
         { message: 'User by code not found', field: 'code' },
       ]);
-    console.log('user', user);
     if (user.emailConfirmation.isConfirmed) {
       throw new BadRequestException([
         {
