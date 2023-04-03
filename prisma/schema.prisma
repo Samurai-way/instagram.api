@@ -25,7 +25,7 @@ model EmailConfirmation {
   confirmationCode String   @unique
   expirationDate   DateTime
   isConfirmed      Boolean  @default(false)
-  user             User     @relation(fields: [userId], references: [id])
+  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           String   @unique
 }
 
@@ -33,7 +33,7 @@ model PasswordRecovery {
   id           String @id @default(uuid())
   email        String @unique
   recoveryCode String
-  user         User   @relation(fields: [userId], references: [id])
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String @unique
 }
 

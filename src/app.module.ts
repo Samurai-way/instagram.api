@@ -15,6 +15,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthService } from './modules/auth/service/auth.service';
 import { GoogleStrategy } from './modules/auth/google/strategy/google.strategy';
 import { ConfirmationUseCase } from './modules/auth/use-cases/confirmation.use-case';
+import { TestingController } from './modules/testing/testing.controller';
 
 const useCases = [RegistrationUseCase, ConfirmationUseCase];
 const services = [
@@ -25,7 +26,12 @@ const services = [
   GoogleStrategy,
 ];
 const repositories = [AuthRepository, UsersRepository, EmailRepository];
-const controllers = [AppController, AuthController, UsersController];
+const controllers = [
+  AppController,
+  AuthController,
+  UsersController,
+  TestingController,
+];
 
 @Module({
   imports: [

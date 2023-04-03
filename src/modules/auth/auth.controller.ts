@@ -12,6 +12,8 @@ import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from './use-cases/registration-use.case';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { AuthService } from './service/auth.service';
+import { ConfirmationCommand } from './use-cases/confirmation.use-case';
+import { EmailConfirmation } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +39,9 @@ export class AuthController {
   }
   @Post('/registration-confirmation')
   @HttpCode(204)
-  async registrationConfirmation(@Body('code') code: string) {
-    // return this.commandBus.execute()
+  async registrationConfirmation(
+    @Body('code') code: string,
+  ): Promise<EmailConfirmation> {
+    return this.commandBus.execute(new ConfirmationCommand(code));
   }
 }
