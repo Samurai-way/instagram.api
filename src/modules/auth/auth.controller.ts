@@ -37,5 +37,7 @@ export class AuthController {
   }
   @Post('/registration-confirmation')
   @HttpCode(204)
-  async registrationConfirmation(@Body('code') code: string) {}
+  async registrationConfirmation(@Body('code') code: string) {
+    // return this.commandBus.execute()
+  }
 }

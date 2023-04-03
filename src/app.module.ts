@@ -14,8 +14,9 @@ import { UsersController } from './modules/users/users.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthService } from './modules/auth/service/auth.service';
 import { GoogleStrategy } from './modules/auth/google/strategy/google.strategy';
+import { ConfirmationUseCase } from './modules/auth/use-cases/confirmation.use-case';
 
-const useCases = [RegistrationUseCase];
+const useCases = [RegistrationUseCase, ConfirmationUseCase];
 const services = [
   AppService,
   PrismaService,
