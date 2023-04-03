@@ -20,6 +20,8 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from './decorator/request.decorator';
 import { LoginCommand } from './use-cases/login.use-case';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
+import { UserModel } from '../users/types/types';
+import { Cookies } from './decorator/cookies.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -65,7 +67,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('/login')
   async userLogin(
-    @User() user: any,
+    @User() user: UserModel,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
@@ -79,5 +81,11 @@ export class AuthController {
       secure: true,
     });
     return { accessToken: accessToken };
+  }
+
+  @Post('/logout')
+  @HttpCode(204)
+  async userLogout(@Cookies() cookies): Promise<boolean> {
+    return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
   }
 }

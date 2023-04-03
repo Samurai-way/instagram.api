@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
-import { User } from '@prisma/client';
 import { AuthService } from '../service/auth.service';
 import { randomUUID } from 'crypto';
+import { UserModel } from '../../users/types/types';
 
 @Injectable()
 export class LoginCommand {
   constructor(
     readonly ip: string,
     readonly title: string,
-    readonly user: User,
+    readonly user: UserModel,
   ) {}
 }
 
