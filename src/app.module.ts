@@ -17,11 +17,13 @@ import { GoogleStrategy } from './modules/auth/google/strategy/google.strategy';
 import { ConfirmationUseCase } from './modules/auth/use-cases/confirmation.use-case';
 import { TestingController } from './modules/testing/testing.controller';
 import { EmailResendingUseCase } from './modules/auth/use-cases/emailResending.use-case';
+import { LoginUseCase } from './modules/auth/use-cases/login.use-case';
 
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
   EmailResendingUseCase,
+  LoginUseCase,
 ];
 const services = [
   AppService,

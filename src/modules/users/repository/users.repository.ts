@@ -68,6 +68,7 @@ export class UsersRepository {
           },
         ],
       },
+      include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
   async findUserByCode(code: string): Promise<User> {
