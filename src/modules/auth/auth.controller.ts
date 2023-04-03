@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Req,
@@ -18,6 +19,7 @@ import { EmailResendingCommand } from './use-cases/emailResending.use-case';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from './decorator/request.decorator';
 import { LoginCommand } from './use-cases/login.use-case';
+import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -32,15 +34,15 @@ export class AuthController {
     return this.commandBus.execute(new RegistrationCommand(dto));
   }
 
-  // @Get()
-  // @UseGuards(GoogleOAuthGuard)
-  // async googleAuth(@Request() req) {}
-  //
-  // @Get('google-redirect')
-  // @UseGuards(GoogleOAuthGuard)
-  // googleAuthRedirect(@Request() req) {
-  //   return this.authService.googleLogin(req);
-  // }
+  @Get()
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth(@Req() req: Request) {}
+
+  @Get('google-redirect')
+  @UseGuards(GoogleOAuthGuard)
+  googleAuthRedirect(@Req() req: Request) {
+    return this.authService.googleLogin(req);
+  }
 
   @Post('/registration-confirmation')
   @HttpCode(204)
