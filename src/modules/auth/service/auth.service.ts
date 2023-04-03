@@ -31,6 +31,7 @@ export class AuthService {
   }
   getLastActiveDateFromRefreshToken(refreshToken: string): string {
     const payload: any = jwt.decode(refreshToken);
+    console.log('payload', payload);
     return new Date(payload.iat * 1000).toISOString();
   }
   async tokenVerify(token: string): Promise<TokensVerifyViewModal> {

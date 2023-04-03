@@ -87,7 +87,7 @@ export class AuthController {
   @Post('/logout')
   @HttpCode(204)
   async userLogout(@Cookies() cookies): Promise<boolean> {
-    console.log(cookies.refreshToken);
+    // console.log(cookies.refreshToken);
     return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
   }
 
