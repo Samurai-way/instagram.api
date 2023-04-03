@@ -11,7 +11,7 @@ import { AuthDto } from './dto/auth.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from './use-cases/registration-use.case';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
-import { AuthService } from './auth.service';
+import { AuthService } from './service/auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +20,7 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('registration')
+  @Post('/registration')
   @HttpCode(204)
   async registration(@Body() dto: AuthDto): Promise<boolean> {
     return this.commandBus.execute(new RegistrationCommand(dto));
@@ -35,4 +35,7 @@ export class AuthController {
   googleAuthRedirect(@Request() req) {
     return this.authService.googleLogin(req);
   }
+  @Post('/registration-confirmation')
+  @HttpCode(204)
+  async registrationConfirmation(@Body('code') code: string) {}
 }
