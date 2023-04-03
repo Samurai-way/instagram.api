@@ -56,7 +56,20 @@ export class UsersRepository {
       },
     });
   }
-
+  async findUserByLoginOrEmail(loginOrEmail: string): Promise<User> {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            email: loginOrEmail,
+          },
+          {
+            login: loginOrEmail,
+          },
+        ],
+      },
+    });
+  }
   async findUserByCode(code: string): Promise<User> {
     return this.prisma.user.findFirst({
       where: {

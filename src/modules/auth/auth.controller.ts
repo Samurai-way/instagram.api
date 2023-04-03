@@ -4,7 +4,9 @@ import {
   Get,
   HttpCode,
   Post,
+  Req,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
@@ -15,6 +17,8 @@ import { AuthService } from './service/auth.service';
 import { ConfirmationCommand } from './use-cases/confirmation.use-case';
 import { EmailConfirmation } from '@prisma/client';
 import { EmailResendingCommand } from './use-cases/emailResending.use-case';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { User } from './decorator/request.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +42,7 @@ export class AuthController {
   googleAuthRedirect(@Request() req) {
     return this.authService.googleLogin(req);
   }
+
   @Post('/registration-confirmation')
   @HttpCode(204)
   async registrationConfirmation(
@@ -45,11 +50,34 @@ export class AuthController {
   ): Promise<EmailConfirmation> {
     return this.commandBus.execute(new ConfirmationCommand(code));
   }
+
   @Post('/registration-email-resending')
   @HttpCode(204)
   async registrationEmailResending(
     @Body('email') email: string,
   ): Promise<boolean> {
     return this.commandBus.execute(new EmailResendingCommand(email));
+  }
+
+  @UseGuards(LocalAuthGuard)
+  // @Throttle(5, 10)
+  @HttpCode(200)
+  @Post('/login')
+  async userLogin(
+    @User() user: any,
+    // @Req() req: Request,
+    // @Res({ passthrough: true }) res: Response,
+  ) {}
+  // : Promise<{ accessToken: string }> {
+  const ip = req.ip;
+  const title = req.headers['user-agent'] || 'browser not found';
+  const { accessToken, refreshToken } = await this.commandBus.execute(
+    new LoginCommand(ip, title, user),
+  );
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: true,
+  });
+  return { accessToken: accessToken };
   }
 }

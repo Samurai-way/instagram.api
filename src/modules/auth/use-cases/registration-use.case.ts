@@ -23,13 +23,12 @@ export class RegistrationUseCase
   async execute(command: RegistrationCommand): Promise<boolean> {
     const userByEmail = await this.usersRepo.findUserByEmail(command.dto.email);
     if (userByEmail)
-      if (userByEmail)
-        throw new BadRequestException([
-          {
-            message: 'User with this email is registered',
-            field: 'email',
-          },
-        ]);
+      throw new BadRequestException([
+        {
+          message: 'User with this email is registered',
+          field: 'email',
+        },
+      ]);
     const userByLogin = await this.usersRepo.findUserByLogin(command.dto.login);
     if (userByLogin)
       throw new BadRequestException([
