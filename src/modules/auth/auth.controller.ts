@@ -12,18 +12,18 @@ import { Request, Response } from 'express';
 import { AuthDto } from './dto/auth.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from './use-cases/registration-use.case';
-import { AuthService } from './service/auth.service';
 import { ConfirmationCommand } from './use-cases/confirmation.use-case';
 import { EmailConfirmation } from '@prisma/client';
 import { EmailResendingCommand } from './use-cases/emailResending.use-case';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from './decorator/request.decorator';
-import { LoginCommand } from './use-cases/login.use-case';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { UserModel } from '../users/types/types';
 import { Cookies } from './decorator/cookies.decorator';
 import { LogoutCommand } from './use-cases/logout.use-case';
 import { Throttle } from '@nestjs/throttler';
+import { AuthService } from './service/auth.service';
+import { LoginCommand } from './use-cases/login.use-case';
 
 @Controller('auth')
 export class AuthController {
