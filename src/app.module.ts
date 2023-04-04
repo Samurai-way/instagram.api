@@ -23,6 +23,8 @@ import { LocalStrategy } from './modules/auth/strategies/local.strategy';
 import { JWT } from './modules/auth/constants';
 import { UsersService } from './modules/users/service/users.service';
 import { LogoutUseCase } from './modules/auth/use-cases/logout.use-case';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 const useCases = [
   RegistrationUseCase,
@@ -48,11 +50,20 @@ const controllers = [
   TestingController,
 ];
 
+const throttlerGuard = {
+  provide: APP_GUARD,
+  useClass: ThrottlerGuard,
+};
+
 @Module({
   imports: [
     CqrsModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 1,
+      limit: 10,
     }),
     JwtModule.register({
       secret: JWT.jwt_secret,
@@ -69,6 +80,12 @@ const controllers = [
     }),
   ],
   controllers,
-  providers: [...useCases, ...services, ...repositories, LocalStrategy],
+  providers: [
+    ...useCases,
+    ...services,
+    ...repositories,
+    LocalStrategy,
+    throttlerGuard,
+  ],
 })
 export class AppModule {}

@@ -16,7 +16,7 @@ export class AuthService {
     };
   }
   async createJwtPair(userId: string, deviceId: string): Promise<JwtPairType> {
-    const payload = { userId: userId, deviceId: deviceId };
+    const payload = { userId: userId };
     const jwtPair = {
       accessToken: this.jwtService.sign(payload, {
         expiresIn: '5m',
@@ -30,6 +30,7 @@ export class AuthService {
     return jwtPair;
   }
   getLastActiveDateFromRefreshToken(refreshToken: string): string {
+    console.log('refreshToken', refreshToken);
     const payload: any = jwt.decode(refreshToken);
     console.log('payload', payload);
     return new Date(payload.iat * 1000).toISOString();
