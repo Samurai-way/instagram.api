@@ -17,14 +17,14 @@ model User {
   createdAt         DateTime           @default(now())
   emailConfirmation EmailConfirmation?
   passwordRecovery  PasswordRecovery?
-  devices           Devices[]
+  devices           Devices?
 }
 
 model Devices {
   id             String @id @default(uuid())
   ip             String
   title          String
-  lastActiveDate String
+  lastActiveData String
   deviceId       String
   user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String @unique

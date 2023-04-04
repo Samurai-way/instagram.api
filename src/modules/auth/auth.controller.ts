@@ -23,6 +23,7 @@ import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { UserModel } from '../users/types/types';
 import { Cookies } from './decorator/cookies.decorator';
 import { LogoutCommand } from './use-cases/logout.use-case';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -47,6 +48,7 @@ export class AuthController {
     return this.authService.googleLogin(req);
   }
 
+  @Throttle(5, 10)
   @Post('/registration-confirmation')
   @HttpCode(204)
   async registrationConfirmation(
@@ -55,6 +57,7 @@ export class AuthController {
     return this.commandBus.execute(new ConfirmationCommand(code));
   }
 
+  @Throttle(5, 10)
   @Post('/registration-email-resending')
   @HttpCode(204)
   async registrationEmailResending(
@@ -64,7 +67,7 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  // @Throttle(5, 10)
+  @Throttle(5, 10)
   @HttpCode(200)
   @Post('/login')
   async userLogin(
