@@ -17,7 +17,17 @@ model User {
   createdAt         DateTime           @default(now())
   emailConfirmation EmailConfirmation?
   passwordRecovery  PasswordRecovery?
+  devices           Devices[]
+}
 
+model Devices {
+  id             String @id @default(uuid())
+  ip             String
+  title          String
+  lastActiveDate String
+  deviceId       String
+  user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String @unique
 }
 
 model EmailConfirmation {
@@ -36,7 +46,5 @@ model PasswordRecovery {
   user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String @unique
 }
-
-
 
 // todo nest g resource 'name' - command for create new (controller, service, repo)

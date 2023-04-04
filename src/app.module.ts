@@ -25,6 +25,10 @@ import { UsersService } from './modules/users/service/users.service';
 import { LogoutUseCase } from './modules/auth/use-cases/logout.use-case';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { DevicesRepository } from './modules/devices/repository/devices.repository';
+import { DeleteAllDevicesByDeviceIdUseCase } from './modules/devices/use-cases/deleteAllDevicesByDeviceIdUseCase';
+import { DeleteAlldevicesUseCase } from './modules/devices/use-cases/deleteAlldevicesUseCase';
+import { GetAlldevicesUseCase } from './modules/devices/use-cases/getAllDevices.use-case';
 
 const useCases = [
   RegistrationUseCase,
@@ -32,6 +36,9 @@ const useCases = [
   EmailResendingUseCase,
   LoginUseCase,
   LogoutUseCase,
+  DeleteAllDevicesByDeviceIdUseCase,
+  DeleteAlldevicesUseCase,
+  GetAlldevicesUseCase,
 ];
 const services = [
   AppService,
@@ -42,7 +49,12 @@ const services = [
   JwtService,
   UsersService,
 ];
-const repositories = [AuthRepository, UsersRepository, EmailRepository];
+const repositories = [
+  AuthRepository,
+  UsersRepository,
+  EmailRepository,
+  DevicesRepository,
+];
 const controllers = [
   AppController,
   AuthController,
