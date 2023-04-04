@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { AuthService } from '../../auth/service/auth.service';
 import { DevicesRepository } from '../repository/devices.repository';
+import { Devices } from '@prisma/client';
 
 @Injectable()
 export class GetAlldevicesCommand {
@@ -15,11 +16,11 @@ export class GetAlldevicesUseCase implements ICommand {
     public devicesRepo: DevicesRepository,
   ) {}
 
-  async execute(command: GetAlldevicesCommand): Promise<any> {
+  async execute(command: GetAlldevicesCommand): Promise<Devices[]> {
     if (!command.refreshToken) throw new UnauthorizedException([]);
     const user = await this.authService.tokenVerify(command.refreshToken);
     if (!user) throw new UnauthorizedException([]);
     const userId = user.userId;
-    // return this.devicesRepo.findAllUserDevicesByUserId(userId);
+    return this.devicesRepo.findAllUserDevicesByUserId(userId);
   }
 }

@@ -4,13 +4,14 @@ import { CommandBus } from '@nestjs/cqrs';
 import { GetAlldevicesCommand } from './use-cases/getAllDevices.use-case';
 import { DeleteAlldevicesCommand } from './use-cases/deleteAlldevicesUseCase';
 import { DeleteAllDevicesByDeviceIdCommand } from './use-cases/deleteAllDevicesByDeviceIdUseCase';
+import { Devices } from '@prisma/client';
 
 @Controller('security')
 export class DevicesController {
   constructor(public command: CommandBus) {}
 
   @Get('/devices')
-  async getAllDevices(@Cookies() cookies): Promise<any> {
+  async getAllDevices(@Cookies() cookies): Promise<Devices[]> {
     return this.command.execute(new GetAlldevicesCommand(cookies.refreshToken));
   }
 

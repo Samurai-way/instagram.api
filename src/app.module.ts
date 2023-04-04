@@ -29,6 +29,7 @@ import { DevicesRepository } from './modules/devices/repository/devices.reposito
 import { DeleteAllDevicesByDeviceIdUseCase } from './modules/devices/use-cases/deleteAllDevicesByDeviceIdUseCase';
 import { DeleteAlldevicesUseCase } from './modules/devices/use-cases/deleteAlldevicesUseCase';
 import { GetAlldevicesUseCase } from './modules/devices/use-cases/getAllDevices.use-case';
+import { DevicesController } from './modules/devices/devices.controller';
 
 const useCases = [
   RegistrationUseCase,
@@ -60,6 +61,7 @@ const controllers = [
   AuthController,
   UsersController,
   TestingController,
+  DevicesController,
 ];
 
 const throttlerGuard = {
