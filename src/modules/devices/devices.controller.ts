@@ -28,7 +28,7 @@ export class DevicesController {
   async deleteDevicesByDeviceId(
     @Cookies() cookies,
     @Param('deviceId') deviceId: string,
-  ): Promise<any> {
+  ) {
     return this.command.execute(
       new DeleteAllDevicesByDeviceIdCommand(cookies.refreshToken, deviceId),
     );

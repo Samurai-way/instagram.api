@@ -55,9 +55,20 @@ export class DevicesRepository {
     return this.prisma.devices.deleteMany({ where: { deviceId } });
   }
 
+  async findDeviceByDeviceId(deviceId: string): Promise<Devices> {
+    return this.prisma.devices.findUnique({ where: { deviceId } });
+  }
+
   async findAllUserDevicesByUserId(userId: string): Promise<Devices[]> {
     return this.prisma.devices.findMany({ where: { userId } });
   }
+
+  async deleteUserSessionByUserAndDeviceId(userId: string, deviceId: string) {
+    return this.prisma.devices.deleteMany({
+      where: { userId, deviceId },
+    });
+  }
+
   // async deleteSessionByUserId(deviceId: string, userId: string): Promise<any> {
   //   return this.prisma.user.deleteMany({ userId, deviceId });
   // }
@@ -69,14 +80,6 @@ export class DevicesRepository {
   //   );
   // }
 
-  // async deleteUserSessionByUserAndDeviceId(
-  //   userId: string,
-  //   deviceId: string,
-  // ): Promise<boolean> {
-  //   const res = await this.devicesModel.deleteOne({ userId, deviceId });
-  //   return res.deletedCount === 1;
-  // }
-  //
   // async deleteSessionsBanUserById(userId: string): Promise<DeleteResult> {
   //   return this.devicesModel.deleteMany({ userId });
   // }
