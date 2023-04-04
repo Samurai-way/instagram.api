@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// todo prisma generate
+
+model User {
+  id                String             @id @default(uuid())
+  login             String             @unique
+  email             String             @unique
+  passwordHash      String
+  createdAt         DateTime           @default(now())
+  emailConfirmation EmailConfirmation?
+  passwordRecovery  PasswordRecovery?
+  devices           Devices[]
+}
+
+model Devices {
+  id             String @id @default(uuid())
+  ip             String
+  title          String
+  lastActiveData String
+  deviceId       String @unique
+  user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+}
+
+model EmailConfirmation {
+  id               String   @id @default(uuid())
+  confirmationCode String   @unique
+  expirationDate   DateTime
+  isConfirmed      Boolean  @default(false)
+  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String   @unique
+}
+
+model PasswordRecovery {
+  id           String @id @default(uuid())
+  email        String @unique
+  recoveryCode String
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String @unique
+}
+
+// todo nest g resource 'name' - command for create new (controller, service, repo)
