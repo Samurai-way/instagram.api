@@ -13,7 +13,7 @@ export class DeleteAlldevicesUseCase implements ICommand {
     public authService: AuthService,
     public devicesRepo: DevicesRepository,
   ) {}
-  async execute(command: DeleteAlldevicesCommand): Promise<any> {
+  async execute(command: DeleteAlldevicesCommand): Promise<void> {
     if (!command.refreshToken) throw new UnauthorizedException([]);
     const lastActive = this.authService.getLastActiveDateFromRefreshToken(
       command.refreshToken,
@@ -22,6 +22,6 @@ export class DeleteAlldevicesUseCase implements ICommand {
     const user = await this.authService.tokenVerify(command.refreshToken);
     if (!user) throw new UnauthorizedException([]);
     const { userId, deviceId } = user;
-    // return this.devicesRepo.deleteAllDevicesById(userId, deviceId);
+    return this.devicesRepo.deleteAllDevicesById(userId, deviceId);
   }
 }

@@ -17,7 +17,7 @@ export class DevicesController {
 
   @Delete('/devices')
   @HttpCode(204)
-  async deleteAllDevices(@Cookies() cookies): Promise<any> {
+  async deleteAllDevices(@Cookies() cookies): Promise<void> {
     return this.command.execute(
       new DeleteAlldevicesCommand(cookies.refreshToken),
     );
