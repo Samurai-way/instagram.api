@@ -17,7 +17,7 @@ model User {
   createdAt         DateTime           @default(now())
   emailConfirmation EmailConfirmation?
   passwordRecovery  PasswordRecovery?
-  devices           Devices?
+  devices           Devices[]
 }
 
 model Devices {
@@ -25,9 +25,9 @@ model Devices {
   ip             String
   title          String
   lastActiveData String
-  deviceId       String
+  deviceId       String @unique
   user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String @unique
+  userId         String
 }
 
 model EmailConfirmation {
