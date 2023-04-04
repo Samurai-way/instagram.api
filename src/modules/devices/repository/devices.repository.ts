@@ -19,12 +19,11 @@ export class DevicesRepository {
         id: randomUUID(),
         ip: ip,
         title: title,
-        lastActiveDate: lastActiveData,
+        lastActiveData: lastActiveData,
         deviceId: deviceId,
         userId: userId,
       },
     });
-
     // async deleteSessionByUserId(deviceId: string, userId: string): Promise<any> {
     //   return this.prisma.user.deleteMany({ userId, deviceId });
     // }
