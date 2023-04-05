@@ -24,6 +24,9 @@ import { LogoutCommand } from './use-cases/logout.use-case';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './service/auth.service';
 import { LoginCommand } from './use-cases/login.use-case';
+import { Ip } from './decorator/ip.decorator';
+import { RefreshTokenCommand } from './use-cases/refreshToken.use-case';
+import { IpDto } from './dto/api.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -85,6 +88,23 @@ export class AuthController {
       secure: false,
     });
     return { accessToken: accessToken };
+  }
+
+  @Post('/refresh-token')
+  @HttpCode(200)
+  async userRefreshToken(
+    @Cookies() cookies,
+    @Ip() ip: IpDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const updateToken = await this.commandBus.execute(
+      new RefreshTokenCommand(ip, cookies.refreshToken),
+    );
+    res.cookie('refreshToken', updateToken.refreshToken, {
+      httpOnly: false,
+      secure: false,
+    });
+    return updateToken;
   }
 
   @Post('/logout')

@@ -30,6 +30,7 @@ import { DeleteAllDevicesByDeviceIdUseCase } from './modules/devices/use-cases/d
 import { DeleteAlldevicesUseCase } from './modules/devices/use-cases/deleteAlldevicesUseCase';
 import { GetAlldevicesUseCase } from './modules/devices/use-cases/getAllDevices.use-case';
 import { DevicesController } from './modules/devices/devices.controller';
+import { RefreshTokenUseCase } from './modules/auth/use-cases/refreshToken.use-case';
 
 const useCases = [
   RegistrationUseCase,
@@ -40,6 +41,7 @@ const useCases = [
   DeleteAllDevicesByDeviceIdUseCase,
   DeleteAlldevicesUseCase,
   GetAlldevicesUseCase,
+  RefreshTokenUseCase,
 ];
 const services = [
   AppService,
