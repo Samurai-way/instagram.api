@@ -7,7 +7,10 @@ import { User } from '@prisma/client';
 export class UsersService {
   constructor(public usersRepo: UsersRepository) {}
 
-  async checkUserCredentials(loginOrEmail: string, password: string) {
+  async checkUserCredentials(
+    loginOrEmail: string,
+    password: string,
+  ): Promise<User> {
     const user: User = await this.usersRepo.findUserByLoginOrEmail(
       loginOrEmail,
     );

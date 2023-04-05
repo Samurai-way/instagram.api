@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { EmailConfirmation, User } from '@prisma/client';
+import { EmailConfirmation, PasswordRecovery, User } from '@prisma/client';
 import { AuthDto } from '../../auth/dto/auth.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
@@ -48,7 +48,9 @@ export class UsersRepository {
       include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
-
+  async findUserById(id: string): Promise<User> {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
   async findUserByLogin(login: string): Promise<User> {
     return this.prisma.user.findUnique({
       where: {
@@ -90,6 +92,12 @@ export class UsersRepository {
       data: { isConfirmed: true },
     });
   }
+  async updateUserHash(passwordHash: string, email: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { email },
+      data: { passwordHash },
+    });
+  }
   async updateEmailConfirmationConfirmationCode(
     newCode: string,
     oldCode: string,
@@ -98,5 +106,19 @@ export class UsersRepository {
       where: { confirmationCode: oldCode },
       data: { confirmationCode: newCode },
     });
+  }
+  async updatePasswordRecoveryModel(
+    recoveryCode: string,
+    email: string,
+  ): Promise<PasswordRecovery> {
+    return this.prisma.passwordRecovery.update({
+      where: { email },
+      data: { recoveryCode },
+    });
+  }
+  async findUserByRecoveryCode(
+    recoveryCode: string,
+  ): Promise<PasswordRecovery> {
+    return this.prisma.passwordRecovery.findFirst({ where: { recoveryCode } });
   }
 }

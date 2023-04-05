@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthDto } from './dto/auth.dto';
+import { AuthDto, NewPasswordDto } from './dto/auth.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from './use-cases/registration-use.case';
 import { ConfirmationCommand } from './use-cases/confirmation.use-case';
@@ -24,6 +24,12 @@ import { LogoutCommand } from './use-cases/logout.use-case';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './service/auth.service';
 import { LoginCommand } from './use-cases/login.use-case';
+import { Ip } from './decorator/ip.decorator';
+import { RefreshTokenCommand } from './use-cases/refreshToken.use-case';
+import { IpDto } from './dto/api.dto';
+import { PasswordRecoveryCommand } from './use-cases/passwordRecovery.use-case';
+import { NewPasswordCommand } from './use-cases/newPassword.use-case';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -87,18 +93,48 @@ export class AuthController {
     return { accessToken: accessToken };
   }
 
+  @Post('/refresh-token')
+  @HttpCode(200)
+  async userRefreshToken(
+    @Cookies() cookies,
+    @Ip() ip: IpDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const updateToken = await this.commandBus.execute(
+      new RefreshTokenCommand(ip, cookies.refreshToken),
+    );
+    res.cookie('refreshToken', updateToken.refreshToken, {
+      httpOnly: false,
+      secure: false,
+    });
+    return updateToken;
+  }
+
+  @Throttle(5, 10)
+  @Post('/password-recovery')
+  @HttpCode(204)
+  async userPasswordRecovery(@Body('email') email: string): Promise<boolean> {
+    return this.commandBus.execute(new PasswordRecoveryCommand(email));
+  }
+
+  @Throttle(5, 10)
+  @Post('/new-password')
+  @HttpCode(204)
+  async userNewPassword(@Body() dto: NewPasswordDto) {
+    return this.commandBus.execute(new NewPasswordCommand(dto));
+  }
+
   @Post('/logout')
   @HttpCode(204)
   async userLogout(@Cookies() cookies): Promise<boolean> {
     return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/me')
   async getUser(
     @User() user: UserModel,
   ): Promise<{ email: string; login: string; userId: string }> {
-    console.log('user', user);
     return { email: user.email, login: user.login, userId: user.id };
   }
 }

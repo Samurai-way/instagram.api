@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { randomUUID } from 'crypto';
-import { Devices } from '@prisma/client';
+import { Devices, User } from '@prisma/client';
 
 @Injectable()
 export class DevicesRepository {
@@ -66,6 +66,26 @@ export class DevicesRepository {
   async deleteUserSessionByUserAndDeviceId(userId: string, deviceId: string) {
     return this.prisma.devices.deleteMany({
       where: { userId, deviceId },
+    });
+  }
+
+  async updateUserSessionById(
+    ip: string,
+    title: string,
+    lastActiveData: string,
+    deviceId: string,
+    userId: string,
+  ): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        devices: {
+          update: {
+            where: { deviceId },
+            data: { ip, title, lastActiveData },
+          },
+        },
+      },
     });
   }
 

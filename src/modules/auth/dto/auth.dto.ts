@@ -1,5 +1,5 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEmail, Length } from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 
 export class AuthDto {
   @Transform(({ value }: TransformFnParams) => value?.trim())
@@ -11,4 +11,13 @@ export class AuthDto {
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @IsEmail()
   email: string;
+}
+
+export class NewPasswordDto {
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @Length(6, 20)
+  newPassword: string;
+  @Transform(({ value }: TransformFnParams) => value?.trim())
+  @IsString()
+  recoveryCode: string;
 }

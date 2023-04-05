@@ -30,6 +30,12 @@ import { DeleteAllDevicesByDeviceIdUseCase } from './modules/devices/use-cases/d
 import { DeleteAlldevicesUseCase } from './modules/devices/use-cases/deleteAlldevicesUseCase';
 import { GetAlldevicesUseCase } from './modules/devices/use-cases/getAllDevices.use-case';
 import { DevicesController } from './modules/devices/devices.controller';
+import { RefreshTokenUseCase } from './modules/auth/use-cases/refreshToken.use-case';
+import { PasswordRecoveryUseCase } from './modules/auth/use-cases/passwordRecovery.use-case';
+import { NewPasswordUseCase } from './modules/auth/use-cases/newPassword.use-case';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
+import { LocalAuthGuard } from './modules/auth/guards/local-auth.guard';
 
 const useCases = [
   RegistrationUseCase,
@@ -40,6 +46,9 @@ const useCases = [
   DeleteAllDevicesByDeviceIdUseCase,
   DeleteAlldevicesUseCase,
   GetAlldevicesUseCase,
+  RefreshTokenUseCase,
+  PasswordRecoveryUseCase,
+  NewPasswordUseCase,
 ];
 const services = [
   AppService,
@@ -99,7 +108,10 @@ const throttlerGuard = {
     ...services,
     ...repositories,
     LocalStrategy,
+    JwtStrategy,
     throttlerGuard,
+    JwtAuthGuard,
+    LocalAuthGuard,
   ],
 })
 export class AppModule {}
