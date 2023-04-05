@@ -27,6 +27,7 @@ import { LoginCommand } from './use-cases/login.use-case';
 import { Ip } from './decorator/ip.decorator';
 import { RefreshTokenCommand } from './use-cases/refreshToken.use-case';
 import { IpDto } from './dto/api.dto';
+import { PasswordRecoveryCommand } from './use-cases/passwordRecovery.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -105,6 +106,13 @@ export class AuthController {
       secure: false,
     });
     return updateToken;
+  }
+
+  @Throttle(5, 10)
+  @Post('/password-recovery')
+  @HttpCode(204)
+  async userPasswordRecovery(@Body('email') email: string): Promise<boolean> {
+    return this.commandBus.execute(new PasswordRecoveryCommand(email));
   }
 
   @Post('/logout')
