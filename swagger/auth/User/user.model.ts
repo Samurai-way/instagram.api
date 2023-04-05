@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Devices, PasswordRecovery } from '@prisma/client';
 import { EmailConfirmation } from './email-confirmation-model';
 import { Devices } from '../Device/device.model';
+import { PasswordRecovery } from './password.recovery.model';
 
 export class UserModel {
   @ApiProperty({

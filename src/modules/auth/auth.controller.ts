@@ -9,16 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AuthDto, NewPasswordDto } from './dto/auth.dto';
 import { CommandBus } from '@nestjs/cqrs';
-import { RegistrationCommand } from './use-cases/registration-use.case';
 import { ConfirmationCommand } from './use-cases/confirmation.use-case';
-import { EmailConfirmation } from '@prisma/client';
 import { EmailResendingCommand } from './use-cases/emailResending.use-case';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from './decorator/request.decorator';
 import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
-import { UserModel } from '../users/types/types';
 import { Cookies } from './decorator/cookies.decorator';
 import { LogoutCommand } from './use-cases/logout.use-case';
 import { Throttle } from '@nestjs/throttler';
@@ -45,6 +41,10 @@ import { BadRequestApiExample } from '../../../swagger/auth/bad-request-schema-e
 import { tooManyRequestsMessage } from '../../../swagger/auth/too-many-requests-message';
 import { AuthUserDataModel } from '../../../swagger/auth/auth-user-model';
 import { AuthCredentialsModel } from '../../../swagger/auth/auth-credentials-model';
+import { AuthDto, NewPasswordDto } from './dto/auth.dto';
+import { RegistrationCommand } from './use-cases/registration-use.case';
+import { UserModel } from '../../../swagger/auth/User/user.model';
+import { EmailConfirmation } from '../../../swagger/auth/User/email-confirmation-model';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -146,7 +146,7 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   async userLogin(
-    @User() user: UserModel,
+    @User() user: any,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
