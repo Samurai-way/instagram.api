@@ -30,7 +30,19 @@ import { IpDto } from './dto/api.dto';
 import { PasswordRecoveryCommand } from './use-cases/passwordRecovery.use-case';
 import { NewPasswordCommand } from './use-cases/newPassword.use-case';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import {
+  ApiBadRequestResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { BadRequestApiExample } from '../../../swagger/auth/bad-request-schema-example';
+import { tooManyRequestsMessage } from '../../../swagger/auth/too-many-requests-message';
+import { AuthUserDataModel } from '../../../swagger/auth/auth-user-model';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -38,6 +50,21 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  @ApiOperation({
+    summary:
+      'Registration in the system. Email with confirmation code will be send to passed email address.',
+  })
+  @ApiResponse({
+    status: 204,
+    description:
+      'Input data is accepted. Email with confirmation code will be send to passed email address',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'If the inputModel has incorrect values (in particular if the user with the given email or login already exists)',
+    schema: BadRequestApiExample,
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @Post('/registration')
   @HttpCode(204)
   async registration(@Body() dto: AuthDto): Promise<boolean> {
@@ -125,13 +152,38 @@ export class AuthController {
   }
 
   @Post('/logout')
+  @ApiOperation({
+    summary:
+      'In cookie client must send correct refreshToken that will be revoked',
+  })
+  @ApiResponse({
+    status: 204,
+    description: 'No content',
+  })
+  @ApiUnauthorizedResponse({
+    description:
+      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
+  })
   @HttpCode(204)
   async userLogout(@Cookies() cookies): Promise<boolean> {
     return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/me')
+  @ApiOperation({ summary: 'Get information about current user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    schema: {
+      example: {
+        email: 'string',
+        login: 'string',
+        userId: 'string',
+      } as AuthUserDataModel,
+    },
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @UseGuards(JwtAuthGuard)
   async getUser(
     @User() user: UserModel,
   ): Promise<{ email: string; login: string; userId: string }> {
