@@ -26,34 +26,31 @@ export class RefreshTokenUseCase
   async execute(
     command: RefreshTokenCommand,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const tokenVerify = await this.authService.tokenVerify(
-      command.refreshToken,
-    );
-    if (!tokenVerify)
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    const jwt = await this.authService.tokenVerify(command.refreshToken);
+    if (!jwt) throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     const isActiveDevice =
       await this.devicesRepository.findDeviceByUserIdDeviceIdAndLastActiveDate(
-        tokenVerify.userId,
-        tokenVerify.deviceId,
-        new Date(tokenVerify.iat * 1000).toISOString(),
+        jwt.userId,
+        jwt.deviceId,
+        new Date(jwt.iat * 1000).toISOString(),
       );
     if (!isActiveDevice)
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    const tokensPair = await this.authService.createJwtPair(
-      tokenVerify.userId,
-      tokenVerify.deviceId,
+    const jwtTokens = await this.authService.createJwtPair(
+      jwt.userId,
+      jwt.deviceId,
     );
-    const lastActiveDate = this.authService.getLastActiveDateFromRefreshToken(
-      tokensPair.refreshToken,
+    const lastActiveData = this.authService.getLastActiveDateFromRefreshToken(
+      jwtTokens.refreshToken,
     );
-    if (!lastActiveDate) throw new UnauthorizedException([]);
-    const deviceSession = await this.devicesRepository.findDeviceByDeviceId(
-      tokenVerify.deviceId,
+    if (!lastActiveData) throw new UnauthorizedException([]);
+    await this.devicesRepository.updateUserSessionById(
+      command.dto.ip,
+      command.dto.title,
+      lastActiveData,
+      jwt.deviceId,
+      jwt.userId,
     );
-    // deviceSession.ip = command.ipDto.ip;
-    // deviceSession.title = command.ipDto.title;
-    // deviceSession.lastActiveDate = lastActiveDate;
-    // await this.devicesRepository.saveResult(deviceSession);
-    return tokensPair;
+    return jwtTokens;
   }
 }
