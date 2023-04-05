@@ -41,7 +41,12 @@ import { BadRequestApiExample } from '../../../swagger/auth/bad-request-schema-e
 import { tooManyRequestsMessage } from '../../../swagger/auth/too-many-requests-message';
 import { AuthUserDataModel } from '../../../swagger/auth/auth-user-model';
 import { AuthCredentialsModel } from '../../../swagger/auth/auth-credentials-model';
-import { AuthDto, NewPasswordDto } from './dto/auth.dto';
+import {
+  AuthDto,
+  ConfirmationCodeDto,
+  EmailDto,
+  NewPasswordDto,
+} from './dto/auth.dto';
 import { RegistrationCommand } from './use-cases/registration-use.case';
 import { UserModel } from '../../../swagger/auth/User/user.model';
 import { EmailConfirmation } from '../../../swagger/auth/User/email-confirmation-model';
@@ -100,9 +105,9 @@ export class AuthController {
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
   async registrationConfirmation(
-    @Body('code') code: string,
+    @Body() dto: ConfirmationCodeDto,
   ): Promise<EmailConfirmation> {
-    return this.commandBus.execute(new ConfirmationCommand(code));
+    return this.commandBus.execute(new ConfirmationCommand(dto));
   }
 
   @Throttle(5, 10)
@@ -121,10 +126,8 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
-  async registrationEmailResending(
-    @Body('email') email: string,
-  ): Promise<boolean> {
-    return this.commandBus.execute(new EmailResendingCommand(email));
+  async registrationEmailResending(@Body() dto: EmailDto): Promise<boolean> {
+    return this.commandBus.execute(new EmailResendingCommand(dto));
   }
 
   @UseGuards(LocalAuthGuard)
@@ -146,7 +149,7 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   async userLogin(
-    @User() user: any,
+    @User() user: UserModel,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
@@ -211,8 +214,8 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
-  async userPasswordRecovery(@Body('email') email: string): Promise<boolean> {
-    return this.commandBus.execute(new PasswordRecoveryCommand(email));
+  async userPasswordRecovery(@Body() dto: EmailDto): Promise<boolean> {
+    return this.commandBus.execute(new PasswordRecoveryCommand(dto));
   }
 
   @Throttle(5, 10)

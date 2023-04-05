@@ -3,10 +3,11 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { EmailService } from '../../email/email.service';
 import { UsersRepository } from '../../users/repository/users.repository';
 import { randomUUID } from 'crypto';
+import { EmailDto } from '../dto/auth.dto';
 
 @Injectable()
 export class EmailResendingCommand {
-  constructor(readonly email: string) {}
+  constructor(readonly dto: EmailDto) {}
 }
 
 @CommandHandler(EmailResendingCommand)
@@ -17,7 +18,7 @@ export class EmailResendingUseCase implements ICommand {
   ) {}
 
   async execute(command: EmailResendingCommand): Promise<boolean> {
-    const user: any = await this.usersRepo.findUserByEmail(command.email);
+    const user: any = await this.usersRepo.findUserByEmail(command.dto.email);
     if (!user || user.emailConfirmation.isConfirmed)
       throw new BadRequestException([
         {
@@ -32,7 +33,7 @@ export class EmailResendingUseCase implements ICommand {
         user.emailConfirmation.confirmationCode,
       );
       await this.emailService.sendConfirmationCodeByEmail(
-        command.email,
+        command.dto.email,
         newCode,
       );
       return true;
