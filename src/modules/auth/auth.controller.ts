@@ -32,6 +32,8 @@ import { NewPasswordCommand } from './use-cases/newPassword.use-case';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
   ApiBadRequestResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -83,6 +85,17 @@ export class AuthController {
 
   @Throttle(5, 10)
   @Post('/registration-confirmation')
+  @ApiOperation({ summary: 'Confirm registration.' })
+  @ApiResponse({
+    status: 204,
+    description: 'Email was verified. Account was activated',
+  })
+  @ApiBadRequestResponse({
+    description:
+      'If the confirmation code is incorrect, expired or already been applied',
+    schema: BadRequestApiExample,
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
   async registrationConfirmation(
     @Body('code') code: string,
@@ -92,6 +105,19 @@ export class AuthController {
 
   @Throttle(5, 10)
   @Post('/registration-email-resending')
+  @ApiOperation({
+    summary: 'Resend confirmation registration Email if user exists',
+  })
+  @ApiResponse({
+    status: 204,
+    description:
+      'Input data is accepted.Email with confirmation code will be send to passed email address.Confirmation code should be inside link as query param, for example: https://some-front.com/confirm-registration?code=youtcodehere',
+  })
+  @ApiBadRequestResponse({
+    description: 'If the inputModel has incorrect values',
+    schema: BadRequestApiExample,
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
   async registrationEmailResending(
     @Body('email') email: string,
@@ -121,6 +147,21 @@ export class AuthController {
   }
 
   @Post('/refresh-token')
+  @ApiOperation({
+    summary:
+      'Generate new pair of access and refresh tokens (in cookie client must send correct refreshToken that will be revoked after refreshing). ' +
+      'Device LastActiveDate should be overrode by issued Date of new refresh token',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns JWT accessToken (expired after 8 hours) in body and JWT refreshToken in cookie (http-only, secure) (expired after 30days).',
+    schema: { example: { accessToken: 'string' } },
+  })
+  @ApiUnauthorizedResponse({
+    description:
+      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
+  })
   @HttpCode(200)
   async userRefreshToken(
     @Cookies() cookies,
@@ -146,6 +187,14 @@ export class AuthController {
 
   @Throttle(5, 10)
   @Post('/new-password')
+  @ApiOperation({ summary: 'Confirm password recovery' })
+  @ApiResponse({
+    status: 204,
+    description: 'If code is valid and new password is accepted',
+  })
+  @ApiForbiddenResponse({ description: 'If code is wrong' })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
+  @ApiNotFoundResponse({ description: 'If user with this code doesnt exist' })
   @HttpCode(204)
   async userNewPassword(@Body() dto: NewPasswordDto) {
     return this.commandBus.execute(new NewPasswordCommand(dto));
