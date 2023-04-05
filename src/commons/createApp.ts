@@ -14,8 +14,7 @@ export const createApp = (app: INestApplication): INestApplication => {
   const config = new DocumentBuilder()
     .setTitle('Instagram api')
     .setDescription('Instagram api')
-    .setVersion('1.0.0')
-    // .addTag('')
+    .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);

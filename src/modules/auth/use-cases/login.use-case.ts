@@ -3,13 +3,14 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { AuthService } from '../service/auth.service';
 import { randomUUID } from 'crypto';
 import { DevicesRepository } from '../../devices/repository/devices.repository';
-import { User } from '@prisma/client';
+import { UserModel } from '../../../../swagger/auth/User/user.model';
+
 @Injectable()
 export class LoginCommand {
   constructor(
     readonly ip: string,
     readonly title: string,
-    readonly user: User,
+    readonly user: UserModel,
   ) {}
 }
 

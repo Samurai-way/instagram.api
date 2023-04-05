@@ -3,10 +3,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EmailService } from '../../email/email.service';
 import { UsersRepository } from '../../users/repository/users.repository';
 import { randomUUID } from 'crypto';
+import { EmailDto } from '../dto/auth.dto';
 
 @Injectable()
 export class PasswordRecoveryCommand {
-  constructor(readonly email: string) {}
+  constructor(readonly dto: EmailDto) {}
 }
 
 @CommandHandler(PasswordRecoveryCommand)
@@ -17,11 +18,13 @@ export class PasswordRecoveryUseCase implements ICommandHandler {
   ) {}
 
   async execute(command: PasswordRecoveryCommand): Promise<boolean> {
-    const user: any = await this.usersRepository.findUserByEmail(command.email);
+    const user: any = await this.usersRepository.findUserByEmail(
+      command.dto.email,
+    );
     if (!user)
       throw new NotFoundException([
         {
-          message: 'user not found',
+          message: 'User not found',
           field: 'email',
         },
       ]);
@@ -29,7 +32,7 @@ export class PasswordRecoveryUseCase implements ICommandHandler {
     try {
       await this.usersRepository.updatePasswordRecoveryModel(
         recoveryCode,
-        command.email,
+        command.dto.email,
       );
       await this.emailService.sendPasswordRecoveryCode(
         user.email,
