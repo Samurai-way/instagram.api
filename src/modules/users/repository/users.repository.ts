@@ -48,7 +48,9 @@ export class UsersRepository {
       include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
-
+  async findUserById(id: string): Promise<User> {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
   async findUserByLogin(login: string): Promise<User> {
     return this.prisma.user.findUnique({
       where: {
@@ -90,6 +92,12 @@ export class UsersRepository {
       data: { isConfirmed: true },
     });
   }
+  async updateUserHash(passwordHash: string, email: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { email },
+      data: { passwordHash },
+    });
+  }
   async updateEmailConfirmationConfirmationCode(
     newCode: string,
     oldCode: string,
@@ -107,5 +115,10 @@ export class UsersRepository {
       where: { email },
       data: { recoveryCode },
     });
+  }
+  async findUserByRecoveryCode(
+    recoveryCode: string,
+  ): Promise<PasswordRecovery> {
+    return this.prisma.passwordRecovery.findFirst({ where: { recoveryCode } });
   }
 }
