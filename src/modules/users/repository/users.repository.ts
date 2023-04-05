@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { EmailConfirmation, User } from '@prisma/client';
+import { EmailConfirmation, PasswordRecovery, User } from '@prisma/client';
 import { AuthDto } from '../../auth/dto/auth.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
@@ -97,6 +97,15 @@ export class UsersRepository {
     return this.prisma.emailConfirmation.update({
       where: { confirmationCode: oldCode },
       data: { confirmationCode: newCode },
+    });
+  }
+  async updatePasswordRecoveryModel(
+    recoveryCode: string,
+    email: string,
+  ): Promise<PasswordRecovery> {
+    return this.prisma.passwordRecovery.update({
+      where: { email },
+      data: { recoveryCode },
     });
   }
 }
