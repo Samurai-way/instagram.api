@@ -32,6 +32,7 @@ import { NewPasswordCommand } from './use-cases/newPassword.use-case';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOperation,
@@ -43,6 +44,7 @@ import {
 import { BadRequestApiExample } from '../../../swagger/auth/bad-request-schema-example';
 import { tooManyRequestsMessage } from '../../../swagger/auth/too-many-requests-message';
 import { AuthUserDataModel } from '../../../swagger/auth/auth-user-model';
+import { AuthCredentialsModel } from '../../../swagger/auth/auth-credentials-model';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -128,7 +130,21 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Throttle(5, 10)
   @HttpCode(200)
+  @ApiBadRequestResponse({
+    description: 'If the inputModel has incorrect values',
+    schema: BadRequestApiExample,
+  })
+  @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
   @Post('/login')
+  @ApiOperation({ summary: 'Try login user to the system' })
+  @ApiBody({ description: 'Example request body', type: AuthCredentialsModel })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns JWT accessToken (expired after 8 hours) in body and JWT refreshToken in cookie (http-only, secure) (expired after 30d ays).',
+    schema: { example: { accessToken: 'string' } },
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   async userLogin(
     @User() user: UserModel,
     @Req() req: Request,
@@ -152,6 +168,7 @@ export class AuthController {
       'Generate new pair of access and refresh tokens (in cookie client must send correct refreshToken that will be revoked after refreshing). ' +
       'Device LastActiveDate should be overrode by issued Date of new refresh token',
   })
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description:
@@ -162,7 +179,6 @@ export class AuthController {
     description:
       'If the JWT refreshToken inside cookie is missing, expired or incorrect',
   })
-  @HttpCode(200)
   async userRefreshToken(
     @Cookies() cookies,
     @Ip() ip: IpDto,
@@ -180,6 +196,20 @@ export class AuthController {
 
   @Throttle(5, 10)
   @Post('/password-recovery')
+  @ApiOperation({
+    summary:
+      'Password recovery via Email confirmation. Email should be sent with RecoveryCode inside',
+  })
+  @ApiResponse({
+    status: 204,
+    description:
+      "Even if current email is not registered (for prevent user's email detection)",
+  })
+  @ApiBadRequestResponse({
+    description:
+      'If the inputModel has invalid email (for example 222^gmail.com)',
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
   async userPasswordRecovery(@Body('email') email: string): Promise<boolean> {
     return this.commandBus.execute(new PasswordRecoveryCommand(email));
