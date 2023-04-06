@@ -5,6 +5,7 @@ import { UsersRepository } from '../../users/repository/users.repository';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { EmailService } from '../../email/email.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class RegistrationCommand {
@@ -20,7 +21,7 @@ export class RegistrationUseCase
     public emailService: EmailService,
   ) {}
 
-  async execute(command: RegistrationCommand): Promise<boolean> {
+  async execute(command: RegistrationCommand): Promise<User> {
     const userByEmail = await this.usersRepo.findUserByEmail(command.dto.email);
     if (userByEmail)
       throw new BadRequestException([
@@ -40,7 +41,7 @@ export class RegistrationUseCase
     const passwordHash = await bcrypt.hash(command.dto.password, 5);
     const confirmationCode = randomUUID();
     try {
-      await this.usersRepo.createUser(
+      const user = await this.usersRepo.createUser(
         command.dto,
         passwordHash,
         confirmationCode,
@@ -49,7 +50,7 @@ export class RegistrationUseCase
         command.dto.email,
         confirmationCode,
       );
-      return true;
+      return user;
     } catch (e) {
       console.log(e);
       return null;
