@@ -18,7 +18,6 @@ import { GoogleOAuthGuard } from './google/guard/google-oauth.guard';
 import { Cookies } from './decorator/cookies.decorator';
 import { LogoutCommand } from './use-cases/logout.use-case';
 import { Throttle } from '@nestjs/throttler';
-import { AuthService } from './service/auth.service';
 import { LoginCommand } from './use-cases/login.use-case';
 import { Ip } from './decorator/ip.decorator';
 import { RefreshTokenCommand } from './use-cases/refreshToken.use-case';
@@ -79,6 +78,10 @@ export class AuthController {
   async registration(@Body() dto: AuthDto): Promise<boolean> {
     return this.commandBus.execute(new RegistrationCommand(dto));
   }
+
+  @Get('/google')
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth() {}
 
   @ApiBadRequestResponse({
     description: 'If the inputModel has incorrect values',
