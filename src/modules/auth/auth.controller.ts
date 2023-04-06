@@ -50,14 +50,14 @@ import {
 import { RegistrationCommand } from './use-cases/registration-use.case';
 import { UserModel } from '../../../swagger/auth/User/user.model';
 import { EmailConfirmation } from '../../../swagger/auth/User/email-confirmation-model';
+import { GoogleAuthDecorator } from './decorator/google.decorator';
+import { GoogleAuthCommand } from './use-cases/google-auth.use-case';
+import { DeviceInfoDecorator } from './decorator/device-info.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private commandBus: CommandBus,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private commandBus: CommandBus) {}
 
   @ApiOperation({
     summary:
@@ -80,13 +80,35 @@ export class AuthController {
     return this.commandBus.execute(new RegistrationCommand(dto));
   }
 
-  @Get()
-  @UseGuards(GoogleOAuthGuard)
-  async googleAuth(@Req() req: Request) {}
+  @ApiBadRequestResponse({
+    description: 'If the inputModel has incorrect values',
+    schema: BadRequestApiExample,
+  })
+  @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
+  @ApiOperation({ summary: 'Try login user to the system with google account' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns JWT accessToken (expired after 8 hours) in body and JWT refreshToken in cookie (http-only, secure) (expired after 30d ays).',
+    schema: { example: { accessToken: 'string' } },
+  })
+  @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @Get('google-redirect')
+  @Throttle(5, 10)
   @UseGuards(GoogleOAuthGuard)
-  googleAuthRedirect(@Req() req: Request) {
-    return this.authService.googleLogin(req);
+  async googleAuthRedirect(
+    @GoogleAuthDecorator() dto: AuthDto,
+    @DeviceInfoDecorator() info,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.commandBus.execute(
+      new GoogleAuthCommand(dto, info),
+    );
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: false,
+      secure: false,
+    });
+    return { accessToken: accessToken };
   }
 
   @Throttle(5, 10)
@@ -137,7 +159,6 @@ export class AuthController {
     schema: BadRequestApiExample,
   })
   @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
-  @Post('/login')
   @ApiOperation({ summary: 'Try login user to the system' })
   @ApiBody({ description: 'Example request body', type: AuthCredentialsModel })
   @ApiResponse({
@@ -147,6 +168,7 @@ export class AuthController {
     schema: { example: { accessToken: 'string' } },
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
+  @Post('/login')
   async userLogin(
     @User() user: UserModel,
     @Req() req: Request,
