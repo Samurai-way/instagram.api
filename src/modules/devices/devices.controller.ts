@@ -12,8 +12,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { deviceViewModelExample } from '../../../swagger/auth/Device/device=view=model-example';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('SecurityDevices')
+@ApiTags('security')
 @Controller('security')
 export class DevicesController {
   constructor(public command: CommandBus) {}
@@ -36,14 +38,6 @@ export class DevicesController {
   }
 
   @Delete('/devices')
-  @ApiOperation({
-    summary: "Terminate all other (exclude current) device's sessions",
-  })
-  @ApiResponse({ status: 204, description: 'No content' })
-  @ApiUnauthorizedResponse({
-    description:
-      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
-  })
   @HttpCode(204)
   async deleteAllDevices(@Cookies() cookies): Promise<void> {
     return this.command.execute(
