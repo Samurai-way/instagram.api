@@ -30,7 +30,7 @@ import { NewPasswordUseCase } from './modules/auth/use-cases/newPassword.use-cas
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { LocalAuthGuard } from './modules/auth/guards/local-auth.guard';
-import { AppController } from './app.controller';
+
 import { AppService } from './app.service';
 import { RegistrationUseCase } from './modules/auth/use-cases/registration-use.case';
 import { AuthRepository } from './modules/auth/repository/auth.repository';
@@ -68,7 +68,6 @@ const repositories = [
   DevicesRepository,
 ];
 const controllers = [
-  AppController,
   AuthController,
   UsersController,
   TestingController,

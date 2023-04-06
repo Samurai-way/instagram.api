@@ -28,6 +28,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiExcludeEndpoint,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOperation,
@@ -80,6 +81,7 @@ export class AuthController {
   }
 
   @Get('/google')
+  @ApiExcludeEndpoint()
   @UseGuards(GoogleOAuthGuard)
   async googleAuth() {}
 
