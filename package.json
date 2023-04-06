@@ -8,8 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npm-run-all prizma:migrate start:production",
-    "start:production": "nest start",
+    "start": "nest start",
     "start:dev": "cross-env NODE_ENV=develop nest start --watch",
     "start:debug": "nest start --debug --watch",
     "prizma:migrate": "npx prisma migrate dev --name init",
