@@ -81,10 +81,7 @@ export class AuthController {
   }
 
   @Get('/google')
-  @ApiExcludeEndpoint()
-  @UseGuards(GoogleOAuthGuard)
-  async googleAuth() {}
-
+  @Throttle(5, 10)
   @ApiBadRequestResponse({
     description: 'If the inputModel has incorrect values',
     schema: BadRequestApiExample,
@@ -98,8 +95,11 @@ export class AuthController {
     schema: { example: { accessToken: 'string' } },
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth() {}
+
   @Get('google-redirect')
-  @Throttle(5, 10)
+  @ApiExcludeEndpoint()
   @UseGuards(GoogleOAuthGuard)
   async googleAuthRedirect(
     @GoogleAuthDecorator() dto: AuthDto,
