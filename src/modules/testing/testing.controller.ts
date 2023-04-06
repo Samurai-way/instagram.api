@@ -13,7 +13,7 @@ export class TestingController {
   })
   @ApiResponse({
     status: 204,
-    description: 'DB data clear',
+    description: 'No content',
   })
   @HttpCode(204)
   async deleteAllData() {
