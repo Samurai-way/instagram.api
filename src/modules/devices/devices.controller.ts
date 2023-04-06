@@ -6,16 +6,17 @@ import { DeleteAlldevicesCommand } from './use-cases/deleteAlldevicesUseCase';
 import { DeleteAllDevicesByDeviceIdCommand } from './use-cases/deleteAllDevicesByDeviceIdUseCase';
 import { Devices } from '@prisma/client';
 import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOperation,
+  ApiParam,
   ApiResponse,
-  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { deviceViewModelExample } from '../../../swagger/auth/Device/device=view=model-example';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('SecurityDevices')
-@ApiTags('security')
+@ApiTags('Devices')
 @Controller('security')
 export class DevicesController {
   constructor(public command: CommandBus) {}
@@ -39,6 +40,14 @@ export class DevicesController {
 
   @Delete('/devices')
   @HttpCode(204)
+  @ApiOperation({
+    summary: "Terminate all other (exclude current) device's sessions",
+  })
+  @ApiResponse({ status: 204, description: 'No content' })
+  @ApiUnauthorizedResponse({
+    description:
+      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
+  })
   async deleteAllDevices(@Cookies() cookies): Promise<void> {
     return this.command.execute(
       new DeleteAlldevicesCommand(cookies.refreshToken),
@@ -46,6 +55,17 @@ export class DevicesController {
   }
 
   @Delete('/devices/:deviceId')
+  @ApiOperation({ summary: 'Terminate specified device session' })
+  @ApiParam({ name: 'deviceId', type: 'string' })
+  @ApiResponse({ status: 204, description: 'No Content' })
+  @ApiUnauthorizedResponse({
+    description:
+      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
+  })
+  @ApiForbiddenResponse({
+    description: 'If try to delete the deviceId of other user',
+  })
+  @ApiNotFoundResponse({ description: 'Not Found' })
   @HttpCode(204)
   async deleteDevicesByDeviceId(
     @Cookies() cookies,
