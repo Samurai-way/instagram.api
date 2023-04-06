@@ -5,7 +5,9 @@ import { GetAlldevicesCommand } from './use-cases/getAllDevices.use-case';
 import { DeleteAlldevicesCommand } from './use-cases/deleteAlldevicesUseCase';
 import { DeleteAllDevicesByDeviceIdCommand } from './use-cases/deleteAllDevicesByDeviceIdUseCase';
 import { Devices } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('security')
 @Controller('security')
 export class DevicesController {
   constructor(public command: CommandBus) {}

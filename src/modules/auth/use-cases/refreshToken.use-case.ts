@@ -40,9 +40,10 @@ export class RefreshTokenUseCase
       jwt.userId,
       jwt.deviceId,
     );
-    const lastActiveData = this.authService.getLastActiveDateFromRefreshToken(
-      jwtTokens.refreshToken,
-    );
+    const lastActiveData =
+      await this.authService.getLastActiveDateFromRefreshToken(
+        jwtTokens.refreshToken,
+      );
     if (!lastActiveData) throw new UnauthorizedException([]);
     await this.devicesRepository.updateUserSessionById(
       command.dto.ip,

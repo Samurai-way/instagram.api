@@ -36,6 +36,7 @@ import { RegistrationUseCase } from './modules/auth/use-cases/registration-use.c
 import { AuthRepository } from './modules/auth/repository/auth.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { UsersRepository } from './modules/users/repository/users.repository';
+import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
 
 const useCases = [
   RegistrationUseCase,
@@ -49,6 +50,7 @@ const useCases = [
   RefreshTokenUseCase,
   PasswordRecoveryUseCase,
   NewPasswordUseCase,
+  GoogleAuthUseCase,
 ];
 const services = [
   AppService,

@@ -26,9 +26,10 @@ export class LoginUseCase implements ICommand {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const deviceId = randomUUID();
     const jwt = await this.authService.createJwtPair(command.user.id, deviceId);
-    const lastActiveDate = this.authService.getLastActiveDateFromRefreshToken(
-      jwt.refreshToken,
-    );
+    const lastActiveDate =
+      await this.authService.getLastActiveDateFromRefreshToken(
+        jwt.refreshToken,
+      );
     await this.devicesRepo.createUserSession(
       command.ip,
       command.title,
