@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -75,8 +76,10 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @Post('/registration')
-  @HttpCode(204)
-  async registration(@Body() dto: AuthDto): Promise<boolean> {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async registration(
+    @Body() dto: AuthDto,
+  ): Promise<{ result: boolean; data: { key: string } }> {
     return this.commandBus.execute(new RegistrationCommand(dto));
   }
 
