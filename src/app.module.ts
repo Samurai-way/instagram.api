@@ -30,13 +30,16 @@ import { NewPasswordUseCase } from './modules/auth/use-cases/newPassword.use-cas
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { LocalAuthGuard } from './modules/auth/guards/local-auth.guard';
-
 import { AppService } from './app.service';
 import { RegistrationUseCase } from './modules/auth/use-cases/registration-use.case';
 import { AuthRepository } from './modules/auth/repository/auth.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { UsersRepository } from './modules/users/repository/users.repository';
 import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
+import { FileController } from './modules/file/file.controller';
+import { FileService } from './modules/file/file.service';
+import { UploadFileUseCase } from './modules/file/use-cases/upload-file.use-case';
+import { S3Service } from './modules/adapters/AWS/S3.service';
 
 const useCases = [
   RegistrationUseCase,
@@ -51,6 +54,7 @@ const useCases = [
   PasswordRecoveryUseCase,
   NewPasswordUseCase,
   GoogleAuthUseCase,
+  UploadFileUseCase,
 ];
 const services = [
   AppService,
@@ -60,6 +64,8 @@ const services = [
   GoogleStrategy,
   JwtService,
   UsersService,
+  FileService,
+  S3Service,
 ];
 const repositories = [
   AuthRepository,
@@ -72,6 +78,7 @@ const controllers = [
   UsersController,
   TestingController,
   DevicesController,
+  FileController,
 ];
 
 const throttlerGuard = {
