@@ -31,7 +31,10 @@ export const createApp = (app: INestApplication): INestApplication => {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
   app.setGlobalPrefix('api');
-  app.enableCors();
+  app.enableCors({
+    methods: 'GET,PUT,POST,DELETE',
+    credentials: true,
+  });
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
