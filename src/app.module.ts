@@ -94,9 +94,7 @@ const throttlerGuard = {
       serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
     CqrsModule,
-    ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot({
       ttl: 1,
       limit: 10,
