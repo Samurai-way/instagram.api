@@ -1,6 +1,6 @@
 import { UserProfileModel } from '../../../src/modules/users/types/types';
 
-export const userProfileExample: UserProfileModel = {
+export const userProfile: UserProfileModel = {
   name: 'string',
   surname: 'string',
   aboutMe: 'string',

@@ -45,6 +45,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
 import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
+import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -61,6 +62,7 @@ const useCases = [
   UploadFileUseCase,
   UpdateProfileUseCase,
   FindProfileUseCase,
+  UploadImageUseCase,
 ];
 const services = [
   AppService,

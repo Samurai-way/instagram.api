@@ -38,7 +38,7 @@ import {
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { BadRequestApiExample } from '../../../swagger/auth/bad-request-schema-example';
+import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example';
 import { tooManyRequestsMessage } from '../../../swagger/auth/too-many-requests-message';
 import { AuthUserDataModel } from '../../../swagger/auth/auth-user-model';
 import { AuthCredentialsModel } from '../../../swagger/auth/auth-credentials-model';
@@ -72,7 +72,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description:
       'If the inputModel has incorrect values (in particular if the user with the given email or login already exists)',
-    schema: BadRequestApiExample,
+    schema: BadRequestApi,
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @Post('/registration')
@@ -87,7 +87,7 @@ export class AuthController {
   @Throttle(5, 10)
   @ApiBadRequestResponse({
     description: 'If the inputModel has incorrect values',
-    schema: BadRequestApiExample,
+    schema: BadRequestApi,
   })
   @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
   @ApiOperation({ summary: 'Try login user to the system with google account' })
@@ -129,7 +129,7 @@ export class AuthController {
   @ApiBadRequestResponse({
     description:
       'If the confirmation code is incorrect, expired or already been applied',
-    schema: BadRequestApiExample,
+    schema: BadRequestApi,
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
@@ -151,7 +151,7 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     description: 'If the inputModel has incorrect values',
-    schema: BadRequestApiExample,
+    schema: BadRequestApi,
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
@@ -164,7 +164,7 @@ export class AuthController {
   @HttpCode(200)
   @ApiBadRequestResponse({
     description: 'If the inputModel has incorrect values',
-    schema: BadRequestApiExample,
+    schema: BadRequestApi,
   })
   @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
   @ApiOperation({ summary: 'Try login user to the system' })
