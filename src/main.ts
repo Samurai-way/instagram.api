@@ -1,11 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
 import { createApp } from './commons/createApp';
 import { createWriteStream } from 'fs';
 import { get } from 'http';
-
-dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const serverUrl = 'http://localhost:3000';
@@ -17,6 +14,7 @@ async function start(): Promise<void> {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
   });
   if (process.env.DEVELOP === 'development') {
+    console.log('DEVELOP', process.env.DEVELOP);
     get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
       console.log(
