@@ -8,7 +8,7 @@ import { get } from 'http';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-const serverUrl = 'http://localhost:3000/api';
+const serverUrl = 'https://instagram-api-psi.vercel.app/api';
 
 async function start(): Promise<void> {
   const rawApp = await NestFactory.create(AppModule);
