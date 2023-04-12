@@ -16,6 +16,7 @@ import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
 import { UpdateProfileCommand } from './use-cases/update-profile.use-case';
 import { UserProfileModel } from './types/types';
+import { FindProfileCommand } from './use-cases/find-profile.use-case';
 
 @ApiTags('Users')
 @Controller('users')
@@ -58,7 +59,9 @@ export class UsersController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
-  async findProfileByUserId(@Param('userId') userId: string) {
-    // return this.
+  async findProfileByUserId(
+    @Param('userId') userId: string,
+  ): Promise<UserProfileModel> {
+    return this.commandBus.execute(new FindProfileCommand(userId));
   }
 }
