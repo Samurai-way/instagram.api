@@ -43,6 +43,7 @@ import { S3Service } from './modules/adapters/AWS/S3.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
+import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -57,6 +58,7 @@ const useCases = [
   NewPasswordUseCase,
   GoogleAuthUseCase,
   UploadFileUseCase,
+  UpdateProfileUseCase,
 ];
 const services = [
   AppService,
