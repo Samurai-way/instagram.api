@@ -13,12 +13,10 @@ const serverUrl = 'http://localhost:3000';
 async function start(): Promise<void> {
   const rawApp = await NestFactory.create(AppModule);
   const app = createApp(rawApp);
-
   await app.listen(PORT, () => {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
   });
   if (process.env.DEVELOP === 'development') {
-    console.log('local');
     get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
       console.log(
