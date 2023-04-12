@@ -1,4 +1,4 @@
-import { Body, Controller, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -46,5 +46,19 @@ export class UsersController {
     @Body() dto: UserProfileDto,
   ): Promise<UserProfileModel> {
     return this.commandBus.execute(new UpdateProfileCommand(dto, user.id));
+  }
+
+  @Get('profile/:userId')
+  @ApiOperation({ summary: 'Get user profile by id of user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns user profile',
+    schema: { example: userProfileExample },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  async findProfileByUserId(@Param('userId') userId: string) {
+    // return this.
   }
 }

@@ -44,6 +44,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
+import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -59,6 +60,7 @@ const useCases = [
   GoogleAuthUseCase,
   UploadFileUseCase,
   UpdateProfileUseCase,
+  FindProfileUseCase,
 ];
 const services = [
   AppService,
