@@ -91,11 +91,11 @@ const throttlerGuard = {
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'swagger-static'),
-      serveRoot: process.env.DEVELOP === 'development' ? '/' : '/swagger',
+      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
     CqrsModule,
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.DEVELOP ?? ''}.env`,
+      envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
     }),
     ThrottlerModule.forRoot({
       ttl: 1,

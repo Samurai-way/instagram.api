@@ -13,8 +13,8 @@ async function start(): Promise<void> {
   await app.listen(PORT, () => {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
   });
-  if (process.env.DEVELOP === 'development') {
-    console.log('DEVELOP', process.env.DEVELOP);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('DEVELOP', process.env.NODE_ENV);
     get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
       console.log(
