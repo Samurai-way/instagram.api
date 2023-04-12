@@ -12,3 +12,12 @@ export class User {
     },
   ) {}
 }
+
+export class UserProfileModel {
+  name: string;
+  surname: string;
+  dateOfBirthday: Date;
+  city: string;
+  aboutMe: string;
+  photo: string;
+}
