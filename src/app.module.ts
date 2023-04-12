@@ -95,7 +95,7 @@ const throttlerGuard = {
     }),
     CqrsModule,
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
+      envFilePath: `.${process.env.DEVELOP ?? ''}.env`,
     }),
     ThrottlerModule.forRoot({
       ttl: 1,
