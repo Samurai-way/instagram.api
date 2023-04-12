@@ -11,24 +11,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser = require('cookie-parser');
 
 export const createApp = (app: INestApplication): INestApplication => {
-  const config = new DocumentBuilder()
-    .setTitle('Instagram api')
-    .setDescription('Instagram api')
-    .setVersion('1.0')
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header',
-      },
-      'JWT-auth',
-    )
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/swagger', app, document);
   app.setGlobalPrefix('api');
   app.enableCors({
     methods: 'GET,PUT,POST,DELETE',
@@ -57,7 +39,24 @@ export const createApp = (app: INestApplication): INestApplication => {
       },
     }),
   );
-
+  const config = new DocumentBuilder()
+    .setTitle('Instagram api')
+    .setDescription('Instagram api')
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/swagger', app, document);
   app.useGlobalFilters(new HttpExceptionFilter());
   return app;
 };
