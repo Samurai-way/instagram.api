@@ -56,7 +56,7 @@ export const createApp = (app: INestApplication): INestApplication => {
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('swagger', app, document);
   app.useGlobalFilters(new HttpExceptionFilter());
   return app;
 };
