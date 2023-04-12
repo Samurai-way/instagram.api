@@ -8,8 +8,8 @@ import { AppModule } from '../app.module';
 import { HttpExceptionFilter } from './exceptionFilter';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { createWriteStream } from 'fs';
 import { get } from 'http';
+import { createWriteStream } from 'fs';
 import cookieParser = require('cookie-parser');
 
 const serverUrl = 'http://localhost:3000';
@@ -30,8 +30,8 @@ export const createApp = (app: INestApplication): INestApplication => {
       'JWT-auth',
     )
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/swagger', app, document);
   // get the swagger json file (if app is running in development mode)
   if (process.env.NODE_ENV === 'development') {
     // write swagger ui files
@@ -41,14 +41,12 @@ export const createApp = (app: INestApplication): INestApplication => {
         `Swagger UI bundle file written to: '/swagger-static/swagger-ui-bundle.js'`,
       );
     });
-
     get(`${serverUrl}/swagger/swagger-ui-init.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-init.js'));
       console.log(
         `Swagger UI init file written to: '/swagger-static/swagger-ui-init.js'`,
       );
     });
-
     get(
       `${serverUrl}/swagger/swagger-ui-standalone-preset.js`,
       function (response) {
@@ -60,7 +58,6 @@ export const createApp = (app: INestApplication): INestApplication => {
         );
       },
     );
-
     get(`${serverUrl}/swagger/swagger-ui.css`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui.css'));
       console.log(
@@ -68,7 +65,6 @@ export const createApp = (app: INestApplication): INestApplication => {
       );
     });
   }
-  SwaggerModule.setup('/swagger', app, document);
   app.setGlobalPrefix('api');
   app.enableCors({
     methods: 'GET,PUT,POST,DELETE',
