@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
-import { UploadFileCommand } from '../../file/use-cases/upload-file.use-case';
+import { UploadFileCommand } from '../../users/use-cases/upload-file.use-case';
 
 @Injectable()
 export class S3Service {

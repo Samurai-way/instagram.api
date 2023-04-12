@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { FileService } from '../file.service';
+import { FileService } from '../../file/file.service';
 import { S3Service } from '../../adapters/AWS/S3.service';
 
 @Injectable()
@@ -10,11 +10,12 @@ export class UploadFileCommand {
   originalname: string;
   size: number;
 
-  constructor(file: Express.Multer.File | UploadFileCommand) {
-    this.buffer = file.buffer;
-    this.mimetype = file.mimetype;
-    this.originalname = file.originalname;
-    this.size = file.size;
+  constructor(photo: Express.Multer.File | UploadFileCommand) {
+    console.log('photo', photo);
+    this.buffer = photo.buffer;
+    this.mimetype = photo.mimetype;
+    this.originalname = photo.originalname;
+    this.size = photo.size;
   }
 }
 

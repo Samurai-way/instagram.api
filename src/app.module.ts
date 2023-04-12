@@ -36,9 +36,8 @@ import { AuthRepository } from './modules/auth/repository/auth.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { UsersRepository } from './modules/users/repository/users.repository';
 import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
-import { FileController } from './modules/file/file.controller';
 import { FileService } from './modules/file/file.service';
-import { UploadFileUseCase } from './modules/file/use-cases/upload-file.use-case';
+import { UploadFileUseCase } from './modules/users/use-cases/upload-file.use-case';
 import { S3Service } from './modules/adapters/AWS/S3.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -46,6 +45,7 @@ import { AppController } from './app.controller';
 import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
 import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
 import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
+
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -87,7 +87,6 @@ const controllers = [
   UsersController,
   TestingController,
   DevicesController,
-  FileController,
 ];
 
 const throttlerGuard = {

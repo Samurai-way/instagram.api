@@ -31,6 +31,7 @@ import { UserProfileModel } from './types/types';
 import { FindProfileCommand } from './use-cases/find-profile.use-case';
 import { fileSchema } from '../../../swagger/auth/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadFileCommand } from './use-cases/upload-file.use-case';
 
 @ApiTags('Users')
 @Controller('users')
@@ -86,7 +87,7 @@ export class UsersController {
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
   ) {
-    // return this.commandBus
+    return this.commandBus.execute(new UploadFileCommand(photo));
   }
 
   @Get('profile/:userId')

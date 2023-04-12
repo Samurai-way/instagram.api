@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as sharp from 'sharp';
-import { UploadFileCommand } from './use-cases/upload-file.use-case';
+import { UploadFileCommand } from '../users/use-cases/upload-file.use-case';
 
 @Injectable()
 export class FileService {
