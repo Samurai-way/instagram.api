@@ -25,35 +25,43 @@ export class RegistrationUseCase
     const userByEmail = await this.usersRepo.findUserByEmail(command.dto.email);
     if (userByEmail)
       throw new BadRequestException([
-        {
-          message: 'User with this email is registered',
-          field: 'email',
-        },
+        createLogicError('email', 'User with this email is registered'),
       ]);
     const userByLogin = await this.usersRepo.findUserByLogin(command.dto.login);
     if (userByLogin)
       throw new BadRequestException([
-        {
-          message: 'User with this email is registered',
-          field: 'email',
-        },
+        new LogicError('login', 'User with this login is registered'),
       ]);
     const passwordHash = await bcrypt.hash(command.dto.password, 5);
     const confirmationCode = randomUUID();
+
+    const user = await this.usersRepo.createUser(
+      command.dto,
+      passwordHash,
+      confirmationCode,
+    );
     try {
-      const user = await this.usersRepo.createUser(
-        command.dto,
-        passwordHash,
-        confirmationCode,
-      );
       await this.emailService.sendConfirmationCodeByEmail(
         command.dto.email,
         confirmationCode,
       );
       return user;
     } catch (e) {
-      console.log(e);
-      return null;
+      throw new BadRequestException([
+        new LogicError(
+          'email',
+          `Email no t sent for some reason. Try to resend code`,
+        ),
+      ]);
     }
   }
 }
+
+class LogicError {
+  constructor(public field: string, public message: string) {}
+}
+
+const createLogicError = (field: string, message: string) => ({
+  field,
+  message,
+});

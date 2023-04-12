@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  shadowDatabaseUrl = env("NEON_URL")
+  provider          = "postgresql"
+  url               = env("NEON_URL")
+  shadowDatabaseUrl = env("DATABASE_URL")
 }
 
 // todo prisma generate
@@ -19,6 +19,7 @@ model User {
   emailConfirmation EmailConfirmation?
   passwordRecovery  PasswordRecovery?
   devices           Devices[]
+  profile           Profile?
 }
 
 model Devices {
@@ -27,8 +28,20 @@ model Devices {
   title          String
   lastActiveData String
   deviceId       String @unique
-  user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
+}
+
+model Profile {
+  id             String   @id @default(uuid())
+  name           String
+  surname        String
+  dateOfBirthday DateTime
+  city           String
+  aboutMe        String
+  photo          String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String   @unique
 }
 
 model EmailConfirmation {
@@ -36,7 +49,7 @@ model EmailConfirmation {
   confirmationCode String   @unique
   expirationDate   DateTime
   isConfirmed      Boolean  @default(false)
-  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           String   @unique
 }
 

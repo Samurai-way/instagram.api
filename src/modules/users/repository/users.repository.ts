@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { EmailConfirmation, PasswordRecovery, User } from '@prisma/client';
+import {
+  EmailConfirmation,
+  PasswordRecovery,
+  Profile,
+  User,
+} from '@prisma/client';
 import { AuthDto } from '../../auth/dto/auth.dto';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
+import { UserProfileDto } from '../dto/user-profile-dto';
 
 @Injectable()
 export class UsersRepository {
@@ -48,9 +54,11 @@ export class UsersRepository {
       include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
+
   async findUserById(id: string): Promise<User> {
     return this.prisma.user.findUnique({ where: { id } });
   }
+
   async findUserByLogin(login: string): Promise<User> {
     return this.prisma.user.findUnique({
       where: {
@@ -58,6 +66,7 @@ export class UsersRepository {
       },
     });
   }
+
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<User> {
     return this.prisma.user.findFirst({
       where: {
@@ -73,6 +82,7 @@ export class UsersRepository {
       include: { emailConfirmation: true, passwordRecovery: true },
     });
   }
+
   async findUserByCode(code: string): Promise<User> {
     return this.prisma.user.findFirst({
       where: {
@@ -92,12 +102,14 @@ export class UsersRepository {
       data: { isConfirmed: true },
     });
   }
+
   async updateUserHash(passwordHash: string, email: string): Promise<User> {
     return this.prisma.user.update({
       where: { email },
       data: { passwordHash },
     });
   }
+
   async updateEmailConfirmationConfirmationCode(
     newCode: string,
     oldCode: string,
@@ -107,6 +119,7 @@ export class UsersRepository {
       data: { confirmationCode: newCode },
     });
   }
+
   async updatePasswordRecoveryModel(
     recoveryCode: string,
     email: string,
@@ -116,9 +129,29 @@ export class UsersRepository {
       data: { recoveryCode },
     });
   }
+
   async findUserByRecoveryCode(
     recoveryCode: string,
   ): Promise<PasswordRecovery> {
     return this.prisma.passwordRecovery.findFirst({ where: { recoveryCode } });
+  }
+
+  async updateUsersProfileByUserId(
+    userId: string,
+    dto: UserProfileDto,
+  ): Promise<Profile> {
+    return this.prisma.profile.update({
+      where: { userId },
+      data: {
+        name: dto.name,
+        surname: dto.surname,
+        dateOfBirthday: dto.dateOfBirthday,
+        city: dto.city,
+        aboutMe: dto.aboutMe,
+      },
+    });
+  }
+  async findProfileByUserId(userId: string): Promise<Profile> {
+    return this.prisma.profile.findFirst({ where: { userId } });
   }
 }

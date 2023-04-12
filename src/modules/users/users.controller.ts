@@ -1,6 +1,108 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UserProfileDto } from './dto/user-profile-dto';
+import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example';
+import { userProfile } from '../../../swagger/auth/User/user-profile';
+import { CommandBus } from '@nestjs/cqrs';
+import { User } from '../auth/decorator/request.decorator';
+import { UserModel } from '../../../swagger/auth/User/user.model';
+import { UpdateProfileCommand } from './use-cases/update-profile.use-case';
+import { UserProfileModel } from './types/types';
+import { FindProfileCommand } from './use-cases/find-profile.use-case';
+import { fileSchema } from '../../../swagger/auth/User/file-schema';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadFileCommand } from './use-cases/upload-file.use-case';
 
-@Controller('')
+@ApiTags('Users')
+@Controller('users')
 export class UsersController {
-  constructor() {}
+  constructor(public readonly commandBus: CommandBus) {}
+
+  @Put('profile')
+  @ApiOperation({ summary: 'Update current user profile' })
+  @ApiBody({
+    description: 'Example request body (all fields not required)',
+    type: UserProfileDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns updated profile',
+    schema: { example: userProfile },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiBadRequestResponse({
+    description: 'If the inputModel has incorrect values',
+    schema: BadRequestApi,
+  })
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @User() user: UserModel,
+    @Body() dto: UserProfileDto,
+  ): Promise<UserProfileModel> {
+    //todo create photo for user profile
+    return this.commandBus.execute(new UpdateProfileCommand(dto, user.id));
+  }
+
+  @Post('avatar')
+  @ApiOperation({
+    summary: 'Upload users avatar',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ schema: fileSchema })
+  @ApiResponse({
+    status: 201,
+    description: 'Uploaded image information object',
+    schema: { example: userProfile },
+  })
+  @ApiBadRequestResponse({
+    description: 'If file format is incorrect',
+    schema: BadRequestApi,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImageForProfile(
+    @UploadedFile() photo: Express.Multer.File,
+    @User() user: UserModel,
+  ) {
+    return this.commandBus.execute(new UploadFileCommand(photo));
+  }
+
+  @Get('profile/:userId')
+  @ApiOperation({ summary: 'Users profile by userId' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully return users profile',
+    schema: { example: userProfile },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  async findProfileByUserId(
+    @Param('userId') userId: string,
+  ): Promise<UserProfileModel> {
+    return this.commandBus.execute(new FindProfileCommand(userId));
+  }
 }

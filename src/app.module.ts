@@ -30,13 +30,21 @@ import { NewPasswordUseCase } from './modules/auth/use-cases/newPassword.use-cas
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { LocalAuthGuard } from './modules/auth/guards/local-auth.guard';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RegistrationUseCase } from './modules/auth/use-cases/registration-use.case';
 import { AuthRepository } from './modules/auth/repository/auth.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { UsersRepository } from './modules/users/repository/users.repository';
 import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
+import { FileService } from './modules/file/file.service';
+import { UploadFileUseCase } from './modules/users/use-cases/upload-file.use-case';
+import { S3Service } from './modules/adapters/AWS/S3.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { AppController } from './app.controller';
+import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
+import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
+import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
 
 const useCases = [
   RegistrationUseCase,
@@ -51,6 +59,10 @@ const useCases = [
   PasswordRecoveryUseCase,
   NewPasswordUseCase,
   GoogleAuthUseCase,
+  UploadFileUseCase,
+  UpdateProfileUseCase,
+  FindProfileUseCase,
+  UploadImageUseCase,
 ];
 const services = [
   AppService,
@@ -60,6 +72,8 @@ const services = [
   GoogleStrategy,
   JwtService,
   UsersService,
+  FileService,
+  S3Service,
 ];
 const repositories = [
   AuthRepository,
@@ -82,10 +96,12 @@ const throttlerGuard = {
 
 @Module({
   imports: [
-    CqrsModule,
-    ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'swagger-static'),
+      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
+    CqrsModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot({
       ttl: 1,
       limit: 10,
