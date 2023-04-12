@@ -14,6 +14,8 @@ import { userProfileExample } from '../../../swagger/auth/User/user-profile-exam
 import { CommandBus } from '@nestjs/cqrs';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
+import { UpdateProfileCommand } from './use-cases/update-profile.use-case';
+import { UserProfileModel } from './types/types';
 
 @ApiTags('Users')
 @Controller('users')
@@ -39,7 +41,10 @@ export class UsersController {
   })
   @Put('profile')
   @UseGuards(JwtAuthGuard)
-  async updateProfile(@User() user: UserModel, @Body() dto: UserProfileDto) {
-    // return this.
+  async updateProfile(
+    @User() user: UserModel,
+    @Body() dto: UserProfileDto,
+  ): Promise<UserProfileModel> {
+    return this.commandBus.execute(new UpdateProfileCommand(dto, user.id));
   }
 }
