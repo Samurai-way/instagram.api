@@ -40,7 +40,8 @@ import { FileController } from './modules/file/file.controller';
 import { FileService } from './modules/file/file.service';
 import { UploadFileUseCase } from './modules/file/use-cases/upload-file.use-case';
 import { S3Service } from './modules/adapters/AWS/S3.service';
-
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -88,6 +89,10 @@ const throttlerGuard = {
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'swagger-static'),
+      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+    }),
     CqrsModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV ?? ''}.env`,
