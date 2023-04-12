@@ -42,6 +42,7 @@ import { UploadFileUseCase } from './modules/file/use-cases/upload-file.use-case
 import { S3Service } from './modules/adapters/AWS/S3.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AppController } from './app.controller';
 const useCases = [
   RegistrationUseCase,
   ConfirmationUseCase,
@@ -75,6 +76,7 @@ const repositories = [
   DevicesRepository,
 ];
 const controllers = [
+  AppController,
   AuthController,
   UsersController,
   TestingController,

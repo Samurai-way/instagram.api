@@ -11,7 +11,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser = require('cookie-parser');
 
 export const createApp = (app: INestApplication): INestApplication => {
-  // app.setGlobalPrefix('api');
   app.enableCors({
     methods: 'GET,PUT,POST,DELETE',
     credentials: true,

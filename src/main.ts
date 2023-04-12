@@ -8,7 +8,13 @@ const PORT = process.env.PORT || 3000;
 const serverUrl = 'http://localhost:3000';
 
 async function start(): Promise<void> {
-  const rawApp = await NestFactory.create(AppModule);
+  const rawApp = await NestFactory.create(AppModule, {
+    cors: {
+      origin: ['http://localhost:3000', 'https://front-team.vercel.app'],
+      credentials: true,
+    },
+  });
+  //todo add front end link
   const app = createApp(rawApp);
   await app.listen(PORT, () => {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
