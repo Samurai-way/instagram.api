@@ -10,7 +10,10 @@ const serverUrl = 'http://localhost:3000';
 async function start(): Promise<void> {
   const rawApp = await NestFactory.create(AppModule, {
     cors: {
-      origin: ['http://localhost:3000', 'https://front-team.vercel.app'],
+      origin: [
+        'http://localhost:3000',
+        'https://instagram-5l5ipwywq-lunia56.vercel.app/',
+      ],
       credentials: true,
     },
   });
