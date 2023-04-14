@@ -8,15 +8,7 @@ const PORT = process.env.PORT || 3000;
 const serverUrl = 'http://localhost:3000';
 
 async function start(): Promise<void> {
-  const rawApp = await NestFactory.create(AppModule, {
-    cors: {
-      origin: [
-        'http://localhost:3000',
-        'https://instagram-5l5ipwywq-lunia56.vercel.app/',
-      ],
-      credentials: true,
-    },
-  });
+  const rawApp = await NestFactory.create(AppModule);
   //todo add front end link
   const app = createApp(rawApp);
   await app.listen(PORT, () => {
