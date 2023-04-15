@@ -8,7 +8,7 @@ import { UploadFileCommand } from '../../users/use-cases/upload-file.use-case';
 export class S3Service {
   constructor(private configService: ConfigService) {}
 
-  bucketName = this.configService.get('AWS_BUCKET_NAME');
+  bucketName = this.configService.get('inctagram-nest');
   s3 = new S3({
     accessKeyId: this.configService.get('ACCESS_ID'),
     secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
@@ -26,6 +26,7 @@ export class S3Service {
           ContentType: file.mimetype,
         })
         .promise();
+      console.log('uploadResult', uploadResult);
       return uploadResult;
     } catch (e) {
       console.log(e);
