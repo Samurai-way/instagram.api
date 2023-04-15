@@ -11,7 +11,6 @@ export class UploadFileCommand {
   size: number;
 
   constructor(photo: Express.Multer.File | UploadFileCommand) {
-    console.log('photo', photo);
     this.buffer = photo.buffer;
     this.mimetype = photo.mimetype;
     this.originalname = photo.originalname;
