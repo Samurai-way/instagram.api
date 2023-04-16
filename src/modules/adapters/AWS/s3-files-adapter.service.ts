@@ -25,7 +25,7 @@ export class S3FilesAdapterService {
     photo: Buffer,
     key: string,
     mimetype: string,
-  ) {
+  ): Promise<{ url: string; fileId: string }> {
     const bucketParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: key,
@@ -33,11 +33,11 @@ export class S3FilesAdapterService {
       ContentType: mimetype,
     };
     const command = new PutObjectCommand(bucketParams);
+    const url = process.env.AWS_IMG_URL + `/${key}`;
     try {
       const result: PutObjectCommandOutput = await this.s3Client.send(command);
-      console.log('res', result);
       return {
-        url: key,
+        url,
         fileId: result.ETag,
       };
     } catch (error) {

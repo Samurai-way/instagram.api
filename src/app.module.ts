@@ -36,7 +36,6 @@ import { AuthRepository } from './modules/auth/repository/auth.repository';
 import { PrismaService } from './prisma/prisma.service';
 import { UsersRepository } from './modules/users/repository/users.repository';
 import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
-import { FileService } from './modules/file/file.service';
 import { UploadFileUseCase } from './modules/users/use-cases/upload-file.use-case';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -73,7 +72,6 @@ const services = [
   GoogleStrategy,
   JwtService,
   UsersService,
-  FileService,
 ];
 const repositories = [
   AuthRepository,

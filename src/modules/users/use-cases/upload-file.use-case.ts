@@ -11,7 +11,10 @@ export class UploadFileCommand {
 export class UploadFileUseCase implements ICommand {
   constructor(public s3: S3FilesAdapterService) {}
 
-  async execute({ userId, photo }: UploadFileCommand) {
+  async execute({
+    userId,
+    photo,
+  }: UploadFileCommand): Promise<{ url: string; fileId: string }> {
     return this.s3.saveFiles(
       userId,
       photo.buffer,
