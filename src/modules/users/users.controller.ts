@@ -81,13 +81,15 @@ export class UsersController {
     schema: BadRequestApi,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadImageForProfile(
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
   ) {
-    return this.commandBus.execute(new UploadFileCommand(photo));
+    // console.log('photo', photo);
+    // return true;
+    // return this.commandBus.execute(new UploadFileCommand(photo));
   }
 
   @Get('profile/:userId')

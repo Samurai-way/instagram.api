@@ -38,13 +38,13 @@ import { UsersRepository } from './modules/users/repository/users.repository';
 import { GoogleAuthUseCase } from './modules/auth/use-cases/google-auth.use-case';
 import { FileService } from './modules/file/file.service';
 import { UploadFileUseCase } from './modules/users/use-cases/upload-file.use-case';
-import { S3Service } from './modules/adapters/AWS/S3.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
 import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
 import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
+import { S3FilesAdapterService } from './modules/adapters/AWS/s3-files-adapter.service';
 
 const useCases = [
   RegistrationUseCase,
@@ -65,6 +65,7 @@ const useCases = [
   UploadImageUseCase,
 ];
 const services = [
+  S3FilesAdapterService,
   AppService,
   PrismaService,
   EmailService,
@@ -73,7 +74,6 @@ const services = [
   JwtService,
   UsersService,
   FileService,
-  S3Service,
 ];
 const repositories = [
   AuthRepository,

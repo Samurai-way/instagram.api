@@ -1,44 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import * as sharp from 'sharp';
-import { UploadFileCommand } from '../users/use-cases/upload-file.use-case';
+import { ConfigService } from '@nestjs/config';
+import { S3 } from 'aws-sdk';
 
 @Injectable()
 export class FileService {
-  constructor() {}
+  constructor(private configService: ConfigService) {}
 
-  async filterFile(file: UploadFileCommand) {
-    const mimetype = file.mimetype;
-    const currentFileType = file.mimetype.split('/')[1];
-    const newName = file.originalname.split('.')[0];
-    const type = file.originalname.split('.')[1];
-    const size = file.size;
+  bucketName = this.configService.get('AWS_BUCKET_NAME');
+  s3 = new S3({
+    region: this.configService.get('AWS_REGION'),
+    accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
+  });
 
-    if (mimetype.includes('image')) {
-      if (currentFileType != 'svg+xml') {
-        const buffer = await this.convertToWebP(file.buffer);
-        return new UploadFileCommand({
-          buffer,
-          originalname: `${newName}.webp`,
-          mimetype,
-          size,
-        });
-      }
-      return new UploadFileCommand({
-        buffer: file.buffer,
-        originalname: `${newName}.svg`,
-        mimetype,
-        size,
-      });
+  async uploadFile(dataBuffer: Buffer, fileName: string) {
+    try {
+      const res = await this.s3
+        .upload({
+          Bucket: this.bucketName,
+          Body: dataBuffer,
+          Key: `${fileName}`,
+          ACL: 'public-read',
+          ContentDisposition: 'inline',
+        })
+        .promise();
+      console.log('res', res);
+      return res;
+    } catch (e) {
+      console.log(e);
     }
-    return new UploadFileCommand({
-      buffer: file.buffer,
-      originalname: `${newName}.${type}`,
-      mimetype,
-      size,
-    });
-  }
-
-  async convertToWebP(file: Buffer): Promise<Buffer> {
-    return sharp(file).webp().toBuffer();
   }
 }
