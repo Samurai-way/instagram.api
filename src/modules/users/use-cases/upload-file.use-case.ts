@@ -3,6 +3,7 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { S3FilesRepository } from '../../adapters/AWS/s3-filesRepository';
 import { UsersRepository } from '../repository/users.repository';
 import { Profile } from '@prisma/client';
+import { UserProfileModel } from '../types/types';
 
 @Injectable()
 export class UploadFileCommand {
@@ -16,12 +17,17 @@ export class UploadFileUseCase implements ICommand {
     public usersRepo: UsersRepository,
   ) {}
 
-  async execute({ userId, photo }: UploadFileCommand): Promise<Profile> {
+  async execute({
+    userId,
+    photo,
+  }: UploadFileCommand): Promise<{ photo: string }> {
     const savedPhoto = await this.s3Repo.saveFile(
       photo.buffer,
       photo.fieldname,
       photo.mimetype,
     );
-    return this.usersRepo.updateUserAvatarByUserId(userId, savedPhoto.url);
+    const { photo: savedPhotoUrl } =
+      await this.usersRepo.updateUserAvatarByUserId(userId, savedPhoto.url);
+    return { photo: savedPhotoUrl };
   }
 }

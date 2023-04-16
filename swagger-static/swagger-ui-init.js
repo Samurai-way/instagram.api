@@ -417,8 +417,7 @@ window.onload = function() {
                       "surname": "string",
                       "aboutMe": "string",
                       "city": "string",
-                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
-                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z"
                     }
                   }
                 }
@@ -464,8 +463,7 @@ window.onload = function() {
                       "surname": "string",
                       "aboutMe": "string",
                       "city": "string",
-                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
-                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z"
                     }
                   }
                 }
@@ -503,17 +501,12 @@ window.onload = function() {
           },
           "responses": {
             "201": {
-              "description": "Uploaded image information object",
+              "description": "Return profile photo",
               "content": {
                 "application/json": {
                   "schema": {
                     "example": {
-                      "name": "string",
-                      "surname": "string",
-                      "aboutMe": "string",
-                      "city": "string",
-                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
-                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                      "photo": "https://inctagram-nest.s3.example"
                     }
                   }
                 }

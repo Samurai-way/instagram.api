@@ -21,7 +21,10 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserProfileDto } from './dto/user-profile-dto';
 import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example';
-import { userProfile } from '../../../swagger/auth/User/user-profile';
+import {
+  userProfile,
+  userProfilePhoto,
+} from '../../../swagger/auth/User/user-profile';
 import { CommandBus } from '@nestjs/cqrs';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
@@ -72,8 +75,8 @@ export class UsersController {
   @ApiBody({ schema: fileSchema })
   @ApiResponse({
     status: 201,
-    description: 'Uploaded image information object',
-    schema: { example: userProfile },
+    description: 'Return profile photo',
+    schema: { example: userProfilePhoto },
   })
   @ApiBadRequestResponse({
     description: 'If file format is incorrect',
@@ -85,7 +88,7 @@ export class UsersController {
   async uploadImageForProfile(
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
-  ): Promise<Profile> {
+  ): Promise<{ photo: string }> {
     return this.commandBus.execute(new UploadFileCommand(user.id, photo));
   }
 
