@@ -43,7 +43,7 @@ import { AppController } from './app.controller';
 import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.use-case';
 import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
 import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
-import { S3FilesAdapterService } from './modules/adapters/AWS/s3-files-adapter.service';
+import { S3FilesRepository } from './modules/adapters/AWS/s3-filesRepository';
 
 const useCases = [
   RegistrationUseCase,
@@ -64,7 +64,7 @@ const useCases = [
   UploadImageUseCase,
 ];
 const services = [
-  S3FilesAdapterService,
+  S3FilesRepository,
   AppService,
   PrismaService,
   EmailService,

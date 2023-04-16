@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -32,6 +31,7 @@ import { FindProfileCommand } from './use-cases/find-profile.use-case';
 import { fileSchema } from '../../../swagger/auth/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileCommand } from './use-cases/upload-file.use-case';
+import { Profile } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('users')
@@ -61,7 +61,6 @@ export class UsersController {
     @User() user: UserModel,
     @Body() dto: UserProfileDto,
   ): Promise<UserProfileModel> {
-    //todo create photo for user profile
     return this.commandBus.execute(new UpdateProfileCommand(dto, user.id));
   }
 
@@ -86,7 +85,7 @@ export class UsersController {
   async uploadImageForProfile(
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
-  ): Promise<{ url: string; fileId: string }> {
+  ): Promise<Profile> {
     return this.commandBus.execute(new UploadFileCommand(user.id, photo));
   }
 

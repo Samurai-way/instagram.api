@@ -151,6 +151,19 @@ export class UsersRepository {
       },
     });
   }
+
+  async updateUserAvatarByUserId(
+    userId: string,
+    photo: string,
+  ): Promise<Profile> {
+    return this.prisma.profile.update({
+      where: { userId },
+      data: {
+        photo,
+      },
+    });
+  }
+
   async findProfileByUserId(userId: string): Promise<Profile> {
     return this.prisma.profile.findFirst({ where: { userId } });
   }

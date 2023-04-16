@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { UserProfileDto } from '../dto/user-profile-dto';
 import { UsersRepository } from '../repository/users.repository';
-import { ConfigService } from '@nestjs/config';
-import { UserProfileModel } from '../types/types';
+import { Profile } from '@prisma/client';
 
 @Injectable()
 export class UpdateProfileCommand {
@@ -12,16 +11,10 @@ export class UpdateProfileCommand {
 
 @CommandHandler(UpdateProfileCommand)
 export class UpdateProfileUseCase implements ICommand {
-  constructor(
-    private readonly usersRepo: UsersRepository,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly usersRepo: UsersRepository) {}
 
-  async execute({
-    userId,
-    dto,
-  }: UpdateProfileCommand): Promise<UserProfileModel> {
-    const profile = await this.usersRepo.updateUsersProfileByUserId(
+  async execute({ userId, dto }: UpdateProfileCommand) {
+    const profile: Profile = await this.usersRepo.updateUsersProfileByUserId(
       userId,
       dto,
     );
@@ -31,9 +24,6 @@ export class UpdateProfileUseCase implements ICommand {
       surname: profile.surname,
       aboutMe: profile.aboutMe,
       dateOfBirthday: profile.dateOfBirthday,
-      photo: profile.photo
-        ? this.configService.get('FILES_URL') + profile.photo
-        : null,
     };
   }
 }

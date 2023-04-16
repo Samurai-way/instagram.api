@@ -8,7 +8,7 @@ import {
 import * as process from 'process';
 
 @Injectable()
-export class S3FilesAdapterService {
+export class S3FilesRepository {
   s3Client: S3Client;
   constructor() {
     this.s3Client = new S3Client({
@@ -21,7 +21,6 @@ export class S3FilesAdapterService {
   }
 
   async saveFile(
-    userId: string,
     photo: Buffer,
     key: string,
     mimetype: string,
