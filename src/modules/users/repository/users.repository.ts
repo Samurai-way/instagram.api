@@ -27,6 +27,9 @@ export class UsersRepository {
         createdAt: new Date(),
         login: dto.login,
         passwordHash: passwordHash,
+        profile: {
+          create: {},
+        },
         emailConfirmation: {
           create: {
             id: randomUUID(),

@@ -448,6 +448,36 @@ window.onload = function() {
           "tags": [
             "Users"
           ]
+        },
+        "get": {
+          "operationId": "UsersController_findProfileByUserId",
+          "summary": "Users profile with his information",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Successfully return users profile",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "name": "string",
+                      "surname": "string",
+                      "aboutMe": "string",
+                      "city": "string",
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
+                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Users"
+          ]
         }
       },
       "/users/avatar": {
@@ -501,47 +531,6 @@ window.onload = function() {
                           "field": "string"
                         }
                       ]
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized"
-            }
-          },
-          "tags": [
-            "Users"
-          ]
-        }
-      },
-      "/users/profile/{userId}": {
-        "get": {
-          "operationId": "UsersController_findProfileByUserId",
-          "summary": "Users profile by userId",
-          "parameters": [
-            {
-              "name": "userId",
-              "required": true,
-              "in": "path",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successfully return users profile",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "example": {
-                      "name": "string",
-                      "surname": "string",
-                      "aboutMe": "string",
-                      "city": "string",
-                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
-                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
                     }
                   }
                 }

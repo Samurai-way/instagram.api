@@ -89,8 +89,8 @@ export class UsersController {
     return this.commandBus.execute(new UploadFileCommand(user.id, photo));
   }
 
-  @Get('profile/:userId')
-  @ApiOperation({ summary: 'Users profile by userId' })
+  @Get('profile')
+  @ApiOperation({ summary: 'Users profile with his information' })
   @ApiResponse({
     status: 200,
     description: 'Successfully return users profile',
@@ -99,9 +99,10 @@ export class UsersController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @UseGuards(JwtAuthGuard)
   async findProfileByUserId(
-    @Param('userId') userId: string,
+    @User() user: UserModel,
   ): Promise<UserProfileModel> {
-    return this.commandBus.execute(new FindProfileCommand(userId));
+    return this.commandBus.execute(new FindProfileCommand(user.id));
   }
 }
