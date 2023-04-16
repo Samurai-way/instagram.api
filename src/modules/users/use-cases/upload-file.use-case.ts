@@ -15,7 +15,7 @@ export class UploadFileUseCase implements ICommand {
     userId,
     photo,
   }: UploadFileCommand): Promise<{ url: string; fileId: string }> {
-    return this.s3.saveFiles(
+    return this.s3.saveFile(
       userId,
       photo.buffer,
       photo.fieldname,

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DeleteObjectCommand,
   PutObjectCommand,
   PutObjectCommandOutput,
   S3Client,
@@ -9,7 +10,6 @@ import * as process from 'process';
 @Injectable()
 export class S3FilesAdapterService {
   s3Client: S3Client;
-
   constructor() {
     this.s3Client = new S3Client({
       region: process.env.AWS_REGION,
@@ -20,7 +20,7 @@ export class S3FilesAdapterService {
     });
   }
 
-  async saveFiles(
+  async saveFile(
     userId: string,
     photo: Buffer,
     key: string,
@@ -40,6 +40,17 @@ export class S3FilesAdapterService {
         url,
         fileId: result.ETag,
       };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async deleteFile(filePatch: string) {
+    const bucketParams = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: filePatch,
+    };
+    try {
+      await this.s3Client.send(new DeleteObjectCommand(bucketParams));
     } catch (error) {
       throw new Error(error);
     }
