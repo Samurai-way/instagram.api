@@ -86,8 +86,8 @@ export class UsersController {
   async uploadImageForProfile(
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
-  ) {
-    return this.commandBus.execute(new UploadFileCommand(photo));
+  ): Promise<{ url: string; fileId: string }> {
+    return this.commandBus.execute(new UploadFileCommand(user.id, photo));
   }
 
   @Get('profile/:userId')

@@ -12,8 +12,12 @@ import cookieParser = require('cookie-parser');
 
 export const createApp = (app: INestApplication): INestApplication => {
   app.enableCors({
-    methods: 'GET,PUT,POST,DELETE',
+    origin: ['https://lighthearted-florentine-ac4023.netlify.app'], // здесь можно указать разрешенные источники для доступа к вашему серверу
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
     credentials: true,
+    allowedHeaders: 'Content-Type, Accept',
   });
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });

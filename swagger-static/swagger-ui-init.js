@@ -11,17 +11,6 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
-      "/": {
-        "get": {
-          "operationId": "AppController_getHello",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": ""
-            }
-          }
-        }
-      },
       "/auth/registration": {
         "post": {
           "operationId": "AuthController_registration",
@@ -401,6 +390,172 @@ window.onload = function() {
           ]
         }
       },
+      "/users/profile": {
+        "put": {
+          "operationId": "UsersController_updateProfile",
+          "summary": "Update current user profile",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "description": "Example request body (all fields not required)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Returns updated profile",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "name": "string",
+                      "surname": "string",
+                      "aboutMe": "string",
+                      "city": "string",
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
+                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
+      "/users/avatar": {
+        "post": {
+          "operationId": "UsersController_uploadImageForProfile",
+          "summary": "Upload users avatar",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Uploaded image information object",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "name": "string",
+                      "surname": "string",
+                      "aboutMe": "string",
+                      "city": "string",
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
+                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If file format is incorrect",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
+      "/users/profile/{userId}": {
+        "get": {
+          "operationId": "UsersController_findProfileByUserId",
+          "summary": "Users profile by userId",
+          "parameters": [
+            {
+              "name": "userId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully return users profile",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "name": "string",
+                      "surname": "string",
+                      "aboutMe": "string",
+                      "city": "string",
+                      "dateOfBirthday": "2023-04-10T16:20:10.847Z",
+                      "photo": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
       "/testing/all-data": {
         "delete": {
           "operationId": "TestingController_deleteAllData",
@@ -495,17 +650,6 @@ window.onload = function() {
           "tags": [
             "Devices"
           ]
-        }
-      },
-      "/file/upload": {
-        "post": {
-          "operationId": "FileController_uploadStaticFiles",
-          "parameters": [],
-          "responses": {
-            "201": {
-              "description": ""
-            }
-          }
         }
       }
     },
@@ -624,6 +768,36 @@ window.onload = function() {
             "newPassword",
             "recoveryCode"
           ]
+        },
+        "UserProfileDto": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Users name",
+              "example": "string"
+            },
+            "surname": {
+              "type": "string",
+              "description": "User surname",
+              "example": "string"
+            },
+            "dateOfBirthday": {
+              "type": "string",
+              "description": "User date of birthday",
+              "example": "some date"
+            },
+            "city": {
+              "type": "string",
+              "description": "User city",
+              "example": "string"
+            },
+            "aboutMe": {
+              "type": "string",
+              "description": "Information about user",
+              "example": "string"
+            }
+          }
         }
       }
     }
