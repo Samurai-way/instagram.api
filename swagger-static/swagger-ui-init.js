@@ -11,6 +11,195 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
+      "/posts/{postId}": {
+        "get": {
+          "operationId": "PostsController_findPostById",
+          "summary": "Find post by id",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Find post by id",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Posts"
+          ]
+        },
+        "delete": {
+          "operationId": "PostsController_deletePostById",
+          "summary": "Delete post by id",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Posts"
+          ]
+        },
+        "put": {
+          "operationId": "PostsController_updatePostById",
+          "summary": "Update post by id",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "description": "Example request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePostDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Returns updated post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": ""
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Posts"
+          ]
+        }
+      },
+      "/posts": {
+        "post": {
+          "operationId": "PostsController_createPost",
+          "summary": "Create post",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "description": "Example request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePostDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Return created post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          },
+          "tags": [
+            "Posts"
+          ]
+        }
+      },
       "/auth/registration": {
         "post": {
           "operationId": "AuthController_registration",
@@ -655,6 +844,82 @@ window.onload = function() {
         }
       },
       "schemas": {
+        "PostViewModel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "String",
+              "description": "Id",
+              "example": "12345"
+            },
+            "postPhoto": {
+              "type": "String",
+              "description": "Photo url",
+              "example": "https://url.com/photo.jpg",
+              "format": "Url"
+            },
+            "description": {
+              "type": "String",
+              "description": "Post description",
+              "example": "Hello world"
+            },
+            "createdAt": {
+              "type": "String",
+              "description": "Date when post was created",
+              "example": "2023-04-10T16:20:10.847Z"
+            },
+            "updatedAt": {
+              "type": "String",
+              "description": "Date when post was created",
+              "example": "2023-04-10T16:20:10.847Z"
+            }
+          },
+          "required": [
+            "id",
+            "postPhoto",
+            "description",
+            "createdAt",
+            "updatedAt"
+          ]
+        },
+        "CreatePostDto": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "String",
+              "description": "Description",
+              "example": "Post description",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "postPhoto": {
+              "type": "object",
+              "description": "Photo",
+              "example": "Multipart form data",
+              "format": "Binary"
+            }
+          },
+          "required": [
+            "description",
+            "postPhoto"
+          ]
+        },
+        "UpdatePostDto": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Post description",
+              "example": "Hello world",
+              "format": "String",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "description"
+          ]
+        },
         "AuthDto": {
           "type": "object",
           "properties": {

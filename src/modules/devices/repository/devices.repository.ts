@@ -88,19 +88,4 @@ export class DevicesRepository {
       },
     });
   }
-
-  // async deleteSessionByUserId(deviceId: string, userId: string): Promise<any> {
-  //   return this.prisma.user.deleteMany({ userId, deviceId });
-  // }
-  //
-  // async updateUserSessionById(newSession: DevicesModal): Promise<UpdateResult> {
-  //   return this.devicesModel.updateOne(
-  //     { userId: newSession.userId, deviceId: newSession.deviceId },
-  //     { $set: { ...newSession } },
-  //   );
-  // }
-
-  // async deleteSessionsBanUserById(userId: string): Promise<DeleteResult> {
-  //   return this.devicesModel.deleteMany({ userId });
-  // }
 }

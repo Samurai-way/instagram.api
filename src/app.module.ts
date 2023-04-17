@@ -44,8 +44,16 @@ import { UpdateProfileUseCase } from './modules/users/use-cases/update-profile.u
 import { FindProfileUseCase } from './modules/users/use-cases/find-profile.use-case';
 import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-case';
 import { S3FilesRepository } from './modules/adapters/AWS/s3-filesRepository';
+import { PostsController } from './modules/posts/posts.controller';
+import { CreatePostUseCase } from './modules/posts/use-cases/create-post.use-case';
+import { PostsRepository } from './modules/posts/repository/posts.repository';
+import { DeletePostByIdUseCase } from './modules/posts/use-cases/delete-post-by-id.use-case';
+import { UpdatePostByIdUseCase } from './modules/posts/use-cases/update-post-by-id.use-case';
 
 const useCases = [
+  UpdatePostByIdUseCase,
+  DeletePostByIdUseCase,
+  CreatePostUseCase,
   RegistrationUseCase,
   ConfirmationUseCase,
   EmailResendingUseCase,
@@ -64,6 +72,7 @@ const useCases = [
   UploadImageUseCase,
 ];
 const services = [
+  PostsRepository,
   S3FilesRepository,
   AppService,
   PrismaService,
@@ -80,6 +89,7 @@ const repositories = [
   DevicesRepository,
 ];
 const controllers = [
+  PostsController,
   AppController,
   AuthController,
   UsersController,

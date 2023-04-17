@@ -20,6 +20,15 @@ model User {
   passwordRecovery  PasswordRecovery?
   devices           Devices[]
   profile           Profile?
+  posts             Posts[]
+}
+
+model Posts {
+  id          String  @id @default(uuid())
+  description String
+  postPhoto   String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 }
 
 model Devices {
