@@ -21,4 +21,10 @@ export class PostsRepository {
       },
     });
   }
+  async findPostById(postId: string): Promise<Posts> {
+    return this.prisma.posts.findFirst({ where: { id: postId } });
+  }
+  async deletePostById(id: string): Promise<Posts> {
+    return this.prisma.posts.delete({ where: { id } });
+  }
 }

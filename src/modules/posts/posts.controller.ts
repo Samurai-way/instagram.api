@@ -1,6 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseGuards,
@@ -14,10 +17,17 @@ import { UserModel } from '../../../swagger/auth/User/user.model';
 import { CreatePostDto } from './dto/createPost.dto';
 import { Posts } from '@prisma/client';
 import { CreatePostCommand } from './use-cases/create-post.use-case';
+import { DeletePostByIdCommand } from './use-cases/delete-post-by-id.use-case';
+import { PostsRepository } from './repository/posts.repository';
 
 @Controller('posts')
 export class PostsController {
-  constructor(public command: CommandBus) {}
+  constructor(public command: CommandBus, public postsRepo: PostsRepository) {}
+
+  @Get(':postId')
+  async findPostById(@Param('postId') postId: string): Promise<Posts> {
+    return this.postsRepo.findPostById(postId);
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -31,5 +41,14 @@ export class PostsController {
     return this.command.execute(
       new CreatePostCommand(user.id, photo, dto.description),
     );
+  }
+
+  @Delete(':postId')
+  @UseGuards(JwtAuthGuard)
+  async deletePostById(
+    @User() user: UserModel,
+    @Param('postId') postId: string,
+  ): Promise<Posts> {
+    return this.command.execute(new DeletePostByIdCommand(user.id, postId));
   }
 }
