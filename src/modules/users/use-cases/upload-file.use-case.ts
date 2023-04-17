@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { S3FilesRepository } from '../../adapters/AWS/s3-filesRepository';
 import { UsersRepository } from '../repository/users.repository';
-import { Profile } from '@prisma/client';
-import { UserProfileModel } from '../types/types';
 
 @Injectable()
 export class UploadFileCommand {

@@ -46,6 +46,7 @@ import { UploadImageUseCase } from './modules/users/use-cases/upload-image.use-c
 import { S3FilesRepository } from './modules/adapters/AWS/s3-filesRepository';
 import { PostsController } from './modules/posts/posts.controller';
 import { CreatePostUseCase } from './modules/posts/use-cases/create-post.use-case';
+import { PostsRepository } from './modules/posts/repository/posts.repository';
 
 const useCases = [
   CreatePostUseCase,
@@ -67,6 +68,7 @@ const useCases = [
   UploadImageUseCase,
 ];
 const services = [
+  PostsRepository,
   S3FilesRepository,
   AppService,
   PrismaService,

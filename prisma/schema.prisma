@@ -26,7 +26,7 @@ model User {
 model Posts {
   id          String  @id @default(uuid())
   description String
-  postPhoto   String?
+  postPhoto   String
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
 }

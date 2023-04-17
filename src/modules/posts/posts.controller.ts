@@ -12,6 +12,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
 import { CreatePostDto } from './dto/createPost.dto';
+import { Posts } from '@prisma/client';
+import { CreatePostCommand } from './use-cases/create-post.use-case';
 
 @Controller('posts')
 export class PostsController {
@@ -24,5 +26,7 @@ export class PostsController {
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
     @Body() dto: CreatePostDto,
-  ) {}
+  ): Promise<Posts> {
+    return this.command.execute(new CreatePostCommand(photo, user.id, dto));
+  }
 }
