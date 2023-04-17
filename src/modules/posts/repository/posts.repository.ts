@@ -21,6 +21,12 @@ export class PostsRepository {
       },
     });
   }
+  async updatePostById(postId: string, description: string): Promise<Posts> {
+    return this.prisma.posts.update({
+      where: { id: postId },
+      data: { description },
+    });
+  }
   async findPostById(postId: string): Promise<Posts> {
     return this.prisma.posts.findFirst({ where: { id: postId } });
   }

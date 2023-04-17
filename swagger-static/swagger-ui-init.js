@@ -28,7 +28,10 @@ window.onload = function() {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         },
         "delete": {
           "operationId": "PostsController_deletePostById",
@@ -43,18 +46,54 @@ window.onload = function() {
             }
           ],
           "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Posts"
+          ]
+        },
+        "put": {
+          "operationId": "PostsController_updatePostById",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePostDto"
+                }
+              }
+            }
+          },
+          "responses": {
             "200": {
               "description": ""
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         }
       },
       "/posts": {
         "post": {
           "operationId": "PostsController_createPost",
+          "summary": "Create post",
           "parameters": [],
           "requestBody": {
             "required": true,
+            "description": "Example request body",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,9 +104,39 @@ window.onload = function() {
           },
           "responses": {
             "201": {
-              "description": ""
+              "description": "Return created post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
             }
-          }
+          },
+          "tags": [
+            "Posts"
+          ]
         }
       },
       "/auth/registration": {
@@ -716,7 +785,79 @@ window.onload = function() {
       "schemas": {
         "CreatePostDto": {
           "type": "object",
-          "properties": {}
+          "properties": {
+            "description": {
+              "type": "String",
+              "description": "Description",
+              "example": "Post description",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "postPhoto": {
+              "type": "object",
+              "description": "Photo",
+              "example": "Multipart form data",
+              "format": "Binary"
+            }
+          },
+          "required": [
+            "description",
+            "postPhoto"
+          ]
+        },
+        "PostViewModel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "String",
+              "description": "Id",
+              "example": "12345"
+            },
+            "postPhoto": {
+              "type": "String",
+              "description": "Photo url",
+              "example": "https://url.com/photo.jpg",
+              "format": "Url"
+            },
+            "description": {
+              "type": "String",
+              "description": "Post description",
+              "example": "Hello world"
+            },
+            "createdAt": {
+              "type": "String",
+              "description": "Date when post was created",
+              "example": "2023-04-10T16:20:10.847Z"
+            },
+            "updatedAt": {
+              "type": "String",
+              "description": "Date when post was created",
+              "example": "2023-04-10T16:20:10.847Z"
+            }
+          },
+          "required": [
+            "id",
+            "postPhoto",
+            "description",
+            "createdAt",
+            "updatedAt"
+          ]
+        },
+        "UpdatePostDto": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Post description",
+              "example": "Hello world",
+              "format": "String",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "description"
+          ]
         },
         "AuthDto": {
           "type": "object",

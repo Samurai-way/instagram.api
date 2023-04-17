@@ -3,8 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
+  Put,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,12 +17,26 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
-import { CreatePostDto } from './dto/createPost.dto';
+import { CreatePostDto, UpdatePostDto } from './dto/post.dtos';
 import { Posts } from '@prisma/client';
 import { CreatePostCommand } from './use-cases/create-post.use-case';
 import { DeletePostByIdCommand } from './use-cases/delete-post-by-id.use-case';
 import { PostsRepository } from './repository/posts.repository';
+import { UpdatePostByIdCommand } from './use-cases/update-post-by-id.use-case';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { apiBody } from 'swagger/Post/api-body';
+import { apiResponse } from '../../../swagger/Post/api-response';
+import { PostViewModel } from './dto/postViewModel';
+import { apiBadRequestResponse } from '../../../swagger/Post/api-bad-request-response';
 
+@ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(public command: CommandBus, public postsRepo: PostsRepository) {}
@@ -30,7 +47,13 @@ export class PostsController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create post' })
+  @ApiBody(apiBody(CreatePostDto))
+  @ApiResponse(apiResponse('Return created post', PostViewModel, 201))
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiBadRequestResponse(apiBadRequestResponse)
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor('file'))
   async createPost(
     @UploadedFile() photo: Express.Multer.File,
@@ -45,10 +68,23 @@ export class PostsController {
 
   @Delete(':postId')
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostById(
     @User() user: UserModel,
     @Param('postId') postId: string,
   ): Promise<Posts> {
     return this.command.execute(new DeletePostByIdCommand(user.id, postId));
+  }
+
+  @Put(':postId')
+  @UseGuards(JwtAuthGuard)
+  async updatePostById(
+    @User() user: UserModel,
+    @Param('postId') postId: string,
+    @Body() dto: UpdatePostDto,
+  ): Promise<Posts> {
+    return this.command.execute(
+      new UpdatePostByIdCommand(postId, user.id, dto.description),
+    );
   }
 }

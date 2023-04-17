@@ -48,8 +48,10 @@ import { PostsController } from './modules/posts/posts.controller';
 import { CreatePostUseCase } from './modules/posts/use-cases/create-post.use-case';
 import { PostsRepository } from './modules/posts/repository/posts.repository';
 import { DeletePostByIdUseCase } from './modules/posts/use-cases/delete-post-by-id.use-case';
+import { UpdatePostByIdUseCase } from './modules/posts/use-cases/update-post-by-id.use-case';
 
 const useCases = [
+  UpdatePostByIdUseCase,
   DeletePostByIdUseCase,
   CreatePostUseCase,
   RegistrationUseCase,
