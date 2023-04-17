@@ -33,15 +33,15 @@ model Devices {
 }
 
 model Profile {
-  id             String   @id @default(uuid())
-  name           String
-  surname        String
-  dateOfBirthday DateTime
-  city           String
-  aboutMe        String
-  photo          String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String   @unique
+  id             String    @id @default(uuid())
+  name           String?
+  surname        String?
+  dateOfBirthday DateTime?
+  city           String?
+  aboutMe        String?
+  photo          String?
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String    @unique
 }
 
 model EmailConfirmation {

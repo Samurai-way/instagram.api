@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -22,7 +21,10 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserProfileDto } from './dto/user-profile-dto';
 import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example';
-import { userProfile } from '../../../swagger/auth/User/user-profile';
+import {
+  userProfile,
+  userProfilePhoto,
+} from '../../../swagger/auth/User/user-profile';
 import { CommandBus } from '@nestjs/cqrs';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/auth/User/user.model';
@@ -32,6 +34,7 @@ import { FindProfileCommand } from './use-cases/find-profile.use-case';
 import { fileSchema } from '../../../swagger/auth/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileCommand } from './use-cases/upload-file.use-case';
+import { Profile } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('users')
@@ -61,7 +64,6 @@ export class UsersController {
     @User() user: UserModel,
     @Body() dto: UserProfileDto,
   ): Promise<UserProfileModel> {
-    //todo create photo for user profile
     return this.commandBus.execute(new UpdateProfileCommand(dto, user.id));
   }
 
@@ -73,8 +75,8 @@ export class UsersController {
   @ApiBody({ schema: fileSchema })
   @ApiResponse({
     status: 201,
-    description: 'Uploaded image information object',
-    schema: { example: userProfile },
+    description: 'Return profile photo',
+    schema: { example: userProfilePhoto },
   })
   @ApiBadRequestResponse({
     description: 'If file format is incorrect',
@@ -86,12 +88,12 @@ export class UsersController {
   async uploadImageForProfile(
     @UploadedFile() photo: Express.Multer.File,
     @User() user: UserModel,
-  ): Promise<{ url: string; fileId: string }> {
+  ): Promise<{ photo: string }> {
     return this.commandBus.execute(new UploadFileCommand(user.id, photo));
   }
 
-  @Get('profile/:userId')
-  @ApiOperation({ summary: 'Users profile by userId' })
+  @Get('profile')
+  @ApiOperation({ summary: 'Users profile with his information' })
   @ApiResponse({
     status: 200,
     description: 'Successfully return users profile',
@@ -100,9 +102,10 @@ export class UsersController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @UseGuards(JwtAuthGuard)
   async findProfileByUserId(
-    @Param('userId') userId: string,
+    @User() user: UserModel,
   ): Promise<UserProfileModel> {
-    return this.commandBus.execute(new FindProfileCommand(userId));
+    return this.commandBus.execute(new FindProfileCommand(user.id));
   }
 }
