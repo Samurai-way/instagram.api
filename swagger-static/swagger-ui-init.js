@@ -14,6 +14,7 @@ window.onload = function() {
       "/posts/{postId}": {
         "get": {
           "operationId": "PostsController_findPostById",
+          "summary": "Find post by id",
           "parameters": [
             {
               "name": "postId",
@@ -26,7 +27,31 @@ window.onload = function() {
           ],
           "responses": {
             "200": {
-              "description": ""
+              "description": "Find post by id",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
             }
           },
           "tags": [
@@ -35,6 +60,7 @@ window.onload = function() {
         },
         "delete": {
           "operationId": "PostsController_deletePostById",
+          "summary": "Delete post by id",
           "parameters": [
             {
               "name": "postId",
@@ -48,6 +74,26 @@ window.onload = function() {
           "responses": {
             "204": {
               "description": ""
+            },
+            "400": {
+              "description": "If the inputModel has incorrect values",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "example": {
+                      "errorsMessages": [
+                        {
+                          "message": "string",
+                          "field": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "tags": [
@@ -56,6 +102,7 @@ window.onload = function() {
         },
         "put": {
           "operationId": "PostsController_updatePostById",
+          "summary": "Update post by id",
           "parameters": [
             {
               "name": "postId",
@@ -68,6 +115,7 @@ window.onload = function() {
           ],
           "requestBody": {
             "required": true,
+            "description": "Example request body",
             "content": {
               "application/json": {
                 "schema": {
@@ -78,7 +126,20 @@ window.onload = function() {
           },
           "responses": {
             "200": {
+              "description": "Returns updated post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PostViewModel"
+                  }
+                }
+              }
+            },
+            "400": {
               "description": ""
+            },
+            "401": {
+              "description": "Unauthorized"
             }
           },
           "tags": [
@@ -783,28 +844,6 @@ window.onload = function() {
         }
       },
       "schemas": {
-        "CreatePostDto": {
-          "type": "object",
-          "properties": {
-            "description": {
-              "type": "String",
-              "description": "Description",
-              "example": "Post description",
-              "minLength": 1,
-              "maxLength": 500
-            },
-            "postPhoto": {
-              "type": "object",
-              "description": "Photo",
-              "example": "Multipart form data",
-              "format": "Binary"
-            }
-          },
-          "required": [
-            "description",
-            "postPhoto"
-          ]
-        },
         "PostViewModel": {
           "type": "object",
           "properties": {
@@ -841,6 +880,28 @@ window.onload = function() {
             "description",
             "createdAt",
             "updatedAt"
+          ]
+        },
+        "CreatePostDto": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "String",
+              "description": "Description",
+              "example": "Post description",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "postPhoto": {
+              "type": "object",
+              "description": "Photo",
+              "example": "Multipart form data",
+              "format": "Binary"
+            }
+          },
+          "required": [
+            "description",
+            "postPhoto"
           ]
         },
         "UpdatePostDto": {
