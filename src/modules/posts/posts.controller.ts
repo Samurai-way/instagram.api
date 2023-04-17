@@ -16,7 +16,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../auth/decorator/request.decorator';
-import { UserModel } from '../../../swagger/auth/User/user.model';
+import { UserModel } from '../../../swagger/User/user.model';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dtos';
 import { Posts } from '@prisma/client';
 import { CreatePostCommand } from './use-cases/create-post.use-case';
