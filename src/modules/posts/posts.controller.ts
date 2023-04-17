@@ -1,4 +1,5 @@
 import {
+  applyDecorators,
   Body,
   Controller,
   Delete,
@@ -17,7 +18,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/User/user.model';
-import { CreatePostDto, UpdatePostDto } from './dto/post.dtos';
+import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { Posts } from '@prisma/client';
 import { CreatePostCommand } from './use-cases/create-post.use-case';
 import { DeletePostByIdCommand } from './use-cases/delete-post-by-id.use-case';
@@ -85,11 +86,7 @@ export class PostsController {
   }
 
   @Put(':postId')
-  @ApiOperation({ summary: 'Update post by id' })
-  @ApiBody(apiBody(UpdatePostDto))
-  @ApiResponse(apiResponse('Returns updated post', PostViewModel))
-  @ApiUnauthorizedResponse(apiUnauthorizedResponse)
-  @ApiBadRequestResponse()
+  @ApiUpdatePost()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async updatePostById(
@@ -101,4 +98,14 @@ export class PostsController {
       new UpdatePostByIdCommand(postId, user.id, dto.description),
     );
   }
+}
+
+export function ApiUpdatePost() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Update post by id' }),
+    ApiBody({ type: UpdatePostDto }),
+    ApiResponse(apiResponse('Returns updated post', PostViewModel)),
+    ApiUnauthorizedResponse(apiUnauthorizedResponse),
+    ApiBadRequestResponse(),
+  );
 }
