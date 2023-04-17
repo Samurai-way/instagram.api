@@ -11,6 +11,27 @@ window.onload = function() {
   "swaggerDoc": {
     "openapi": "3.0.0",
     "paths": {
+      "/posts": {
+        "post": {
+          "operationId": "PostsController_createPost",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePostDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          }
+        }
+      },
       "/auth/registration": {
         "post": {
           "operationId": "AuthController_registration",
@@ -655,6 +676,10 @@ window.onload = function() {
         }
       },
       "schemas": {
+        "CreatePostDto": {
+          "type": "object",
+          "properties": {}
+        },
         "AuthDto": {
           "type": "object",
           "properties": {
