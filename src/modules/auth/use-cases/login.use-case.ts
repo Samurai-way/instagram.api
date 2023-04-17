@@ -3,7 +3,7 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { AuthService } from '../service/auth.service';
 import { randomUUID } from 'crypto';
 import { DevicesRepository } from '../../devices/repository/devices.repository';
-import { UserModel } from '../../../../swagger/auth/User/user.model';
+import { UserModel } from '../../../../swagger/User/user.model';
 
 @Injectable()
 export class LoginCommand {

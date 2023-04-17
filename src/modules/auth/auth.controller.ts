@@ -49,8 +49,8 @@ import {
   NewPasswordDto,
 } from './dto/auth.dto';
 import { RegistrationCommand } from './use-cases/registration-use.case';
-import { UserModel } from '../../../swagger/auth/User/user.model';
-import { EmailConfirmation } from '../../../swagger/auth/User/email-confirmation-model';
+import { UserModel } from '../../../swagger/User/user.model';
+import { EmailConfirmation } from '../../../swagger/User/email-confirmation-model';
 import { GoogleAuthDecorator } from './decorator/google.decorator';
 import { GoogleAuthCommand } from './use-cases/google-auth.use-case';
 import { DeviceInfoDecorator } from './decorator/device-info.decorator';

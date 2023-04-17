@@ -24,14 +24,14 @@ import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example'
 import {
   userProfile,
   userProfilePhoto,
-} from '../../../swagger/auth/User/user-profile';
+} from '../../../swagger/User/user-profile';
 import { CommandBus } from '@nestjs/cqrs';
 import { User } from '../auth/decorator/request.decorator';
-import { UserModel } from '../../../swagger/auth/User/user.model';
+import { UserModel } from '../../../swagger/User/user.model';
 import { UpdateProfileCommand } from './use-cases/update-profile.use-case';
 import { UserProfileModel } from './types/types';
 import { FindProfileCommand } from './use-cases/find-profile.use-case';
-import { fileSchema } from '../../../swagger/auth/User/file-schema';
+import { fileSchema } from '../../../swagger/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileCommand } from './use-cases/upload-file.use-case';
 import { Profile } from '@prisma/client';

@@ -13,7 +13,7 @@ import {
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { deviceViewModelExample } from '../../../swagger/auth/Device/device=view=model-example';
+import { deviceViewModelExample } from '../../../swagger/Device/device=view=model-example';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Devices')

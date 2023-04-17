@@ -8,11 +8,11 @@ import { AppModule } from '../app.module';
 import { HttpExceptionFilter } from './exceptionFilter';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
 export const createApp = (app: INestApplication): INestApplication => {
   app.enableCors({
-    origin: ['https://lighthearted-florentine-ac4023.netlify.app'], // здесь можно указать разрешенные источники для доступа к вашему серверу
+    origin: ['https://lighthearted-florentine-ac4023.netlify.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
