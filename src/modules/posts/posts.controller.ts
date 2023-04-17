@@ -27,6 +27,9 @@ export class PostsController {
     @User() user: UserModel,
     @Body() dto: CreatePostDto,
   ): Promise<Posts> {
-    return this.command.execute(new CreatePostCommand(photo, user.id, dto));
+    console.log('dto', dto, 'photo', photo);
+    return this.command.execute(
+      new CreatePostCommand(user.id, photo, dto.description),
+    );
   }
 }
