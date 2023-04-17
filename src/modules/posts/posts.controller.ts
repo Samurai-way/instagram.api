@@ -32,7 +32,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { apiBody } from 'swagger/Post/api-body';
 import { apiResponse } from '../../../swagger/Post/api-response';
 import { PostViewModel } from './dto/postViewModel';
 import { apiBadRequestResponse } from '../../../swagger/Post/api-bad-request-response';
@@ -53,7 +52,7 @@ export class PostsController {
 
   @Post()
   @ApiOperation({ summary: 'Create post' })
-  @ApiBody(apiBody(CreatePostDto))
+  @ApiBody({ type: CreatePostDto })
   @ApiResponse(apiResponse('Return created post', PostViewModel, 201))
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBadRequestResponse(apiBadRequestResponse)
