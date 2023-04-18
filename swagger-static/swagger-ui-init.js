@@ -115,7 +115,6 @@ window.onload = function() {
           ],
           "requestBody": {
             "required": true,
-            "description": "Example request body",
             "content": {
               "application/json": {
                 "schema": {
@@ -154,7 +153,6 @@ window.onload = function() {
           "parameters": [],
           "requestBody": {
             "required": true,
-            "description": "Example request body",
             "content": {
               "application/json": {
                 "schema": {
