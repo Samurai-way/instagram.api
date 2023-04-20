@@ -8,7 +8,7 @@ import {
 import { Server, Socket } from 'socket.io';
 
 interface IMessage {
-  username: string;
+  name: string;
   message: string;
 }
 
@@ -35,6 +35,11 @@ export class SocketServer implements OnGatewayConnection, OnGatewayDisconnect {
   handleMessage(client: Socket, message: IMessage): void {
     console.log(`New message received: ${message.message}`);
     this.server.emit('message', message);
+  }
+
+  @SubscribeMessage('join')
+  handleJoin(client: Socket, data: { name: string }): void {
+    console.log(`New user joined: ${data.name}`);
   }
 
   private emitNumClients(): void {
