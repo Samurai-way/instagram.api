@@ -9,7 +9,6 @@ const serverUrl = 'http://localhost:3000';
 
 async function start(): Promise<void> {
   const rawApp = await NestFactory.create(AppModule);
-  //todo add front end link
   const app = createApp(rawApp);
   await app.listen(PORT, () => {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
