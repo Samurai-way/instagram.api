@@ -11,12 +11,18 @@ import { Server, Socket } from 'socket.io';
 export class SocketServer implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
+  numClients = 0;
+
   handleConnection(client: Socket) {
     console.log('New client connected');
+    this.numClients++;
+    this.server.emit('numClients', this.numClients);
   }
 
   handleDisconnect(client: Socket) {
     console.log('Client disconnected');
+    this.numClients--;
+    this.server.emit('numClients', this.numClients);
   }
 
   @SubscribeMessage('message')
