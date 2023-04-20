@@ -3,10 +3,11 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class SocketServer implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
@@ -16,5 +17,12 @@ export class SocketServer implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleDisconnect(client: Socket) {
     console.log('Client disconnected');
+  }
+
+  @SubscribeMessage('message')
+  handleMessage(client: Socket, message: string) {
+    console.log('New message received: ', message);
+    // Send the message to all connected clients
+    this.server.emit('message', message);
   }
 }
