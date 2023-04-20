@@ -49,6 +49,7 @@ import { CreatePostUseCase } from './modules/posts/use-cases/create-post.use-cas
 import { PostsRepository } from './modules/posts/repository/posts.repository';
 import { DeletePostByIdUseCase } from './modules/posts/use-cases/delete-post-by-id.use-case';
 import { UpdatePostByIdUseCase } from './modules/posts/use-cases/update-post-by-id.use-case';
+import { SocketServer } from './websocket/websocket.server';
 
 const useCases = [
   UpdatePostByIdUseCase,
@@ -133,6 +134,7 @@ const throttlerGuard = {
     ...useCases,
     ...services,
     ...repositories,
+    SocketServer,
     LocalStrategy,
     JwtStrategy,
     throttlerGuard,
