@@ -50,6 +50,8 @@ import { PostsRepository } from './modules/posts/repository/posts.repository';
 import { DeletePostByIdUseCase } from './modules/posts/use-cases/delete-post-by-id.use-case';
 import { UpdatePostByIdUseCase } from './modules/posts/use-cases/update-post-by-id.use-case';
 import { SocketServer } from './websocket/websocket.server';
+import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
+import { RecaptchaGuard } from './modules/auth/guards/recaptcha.guard';
 
 const useCases = [
   UpdatePostByIdUseCase,
@@ -137,6 +139,7 @@ const throttlerGuard = {
     SocketServer,
     LocalStrategy,
     JwtStrategy,
+    RecaptchaGuard,
     throttlerGuard,
     JwtAuthGuard,
     LocalAuthGuard,
