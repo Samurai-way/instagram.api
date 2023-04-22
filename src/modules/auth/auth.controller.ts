@@ -231,7 +231,6 @@ export class AuthController {
   }
 
   @Throttle(5, 10)
-  @UseGuards(RecaptchaGuard)
   @Post('/password-recovery')
   @ApiOperation({
     summary:
@@ -248,10 +247,8 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
-  async userPasswordRecovery(@Body() body) {
-    // Promise<boolean> // @Body() dto: EmailDto
-    return true;
-    // return this.commandBus.execute(new PasswordRecoveryCommand(dto));
+  async userPasswordRecovery(@Body() dto: EmailDto): Promise<boolean> {
+    return this.commandBus.execute(new PasswordRecoveryCommand(dto));
   }
 
   @Throttle(5, 10)

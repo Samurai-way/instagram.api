@@ -1,5 +1,4 @@
 import {
-  applyDecorators,
   Body,
   Controller,
   Delete,
@@ -24,18 +23,11 @@ import { CreatePostCommand } from './use-cases/create-post.use-case';
 import { DeletePostByIdCommand } from './use-cases/delete-post-by-id.use-case';
 import { PostsRepository } from './repository/posts.repository';
 import { UpdatePostByIdCommand } from './use-cases/update-post-by-id.use-case';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { apiResponse } from '../../../swagger/Post/api-response';
-import { PostViewModel } from './dto/postViewModel';
-import { apiBadRequestResponse } from '../../../swagger/Post/api-bad-request-response';
-import { apiUnauthorizedResponse } from '../../../swagger/Post/api-unauthorized-response';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiUpdatePostSwagger } from '../../../swagger/Post/api-update-post';
+import { ApiDeletePostByIdSwagger } from '../../../swagger/Post/api-delete-post-by-id';
+import { ApiCreatePostSwagger } from '../../../swagger/Post/api-create-post';
+import { ApiFindPostByIdSwagger } from '../../../swagger/Post/api-find-post-by-id';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -43,19 +35,13 @@ export class PostsController {
   constructor(public command: CommandBus, public postsRepo: PostsRepository) {}
 
   @Get(':postId')
-  @ApiOperation({ summary: 'Find post by id' })
-  @ApiResponse(apiResponse('Find post by id', PostViewModel))
-  @ApiBadRequestResponse(apiBadRequestResponse)
+  @ApiFindPostByIdSwagger()
   async findPostById(@Param('postId') postId: string): Promise<Posts> {
     return this.postsRepo.findPostById(postId);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create post' })
-  @ApiBody({ type: CreatePostDto })
-  @ApiResponse(apiResponse('Return created post', PostViewModel, 201))
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiBadRequestResponse(apiBadRequestResponse)
+  @ApiCreatePostSwagger()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor('file'))
@@ -64,17 +50,13 @@ export class PostsController {
     @User() user: UserModel,
     @Body() dto: CreatePostDto,
   ): Promise<Posts> {
-    console.log('dto', dto, 'photo', photo);
     return this.command.execute(
       new CreatePostCommand(user.id, photo, dto.description),
     );
   }
 
   @Delete(':postId')
-  @ApiOperation({ summary: 'Delete post by id' })
-  @ApiResponse({ status: 204 })
-  @ApiUnauthorizedResponse(apiUnauthorizedResponse)
-  @ApiBadRequestResponse(apiBadRequestResponse)
+  @ApiDeletePostByIdSwagger()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePostById(
@@ -85,7 +67,7 @@ export class PostsController {
   }
 
   @Put(':postId')
-  @ApiUpdatePost()
+  @ApiUpdatePostSwagger()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async updatePostById(
@@ -97,14 +79,4 @@ export class PostsController {
       new UpdatePostByIdCommand(postId, user.id, dto.description),
     );
   }
-}
-
-export function ApiUpdatePost() {
-  return applyDecorators(
-    ApiOperation({ summary: 'Update post by id' }),
-    ApiBody({ type: UpdatePostDto }),
-    ApiResponse(apiResponse('Returns updated post', PostViewModel)),
-    ApiUnauthorizedResponse(apiUnauthorizedResponse),
-    ApiBadRequestResponse(),
-  );
 }

@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   UploadedFile,
@@ -34,7 +33,6 @@ import { FindProfileCommand } from './use-cases/find-profile.use-case';
 import { fileSchema } from '../../../swagger/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileCommand } from './use-cases/upload-file.use-case';
-import { Profile } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('users')
