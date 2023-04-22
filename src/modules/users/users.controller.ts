@@ -2,39 +2,26 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserProfileDto } from './dto/user-profile-dto';
-import { BadRequestApi } from '../../../swagger/auth/bad-request-schema-example';
-import {
-  userProfile,
-  userProfilePhoto,
-} from '../../../swagger/User/user-profile';
 import { CommandBus } from '@nestjs/cqrs';
 import { User } from '../auth/decorator/request.decorator';
 import { UserModel } from '../../../swagger/User/user.model';
 import { UpdateProfileCommand } from './use-cases/update-profile.use-case';
 import { UserProfileModel } from './types/types';
 import { FindProfileCommand } from './use-cases/find-profile.use-case';
-import { fileSchema } from '../../../swagger/User/file-schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadFileCommand } from './use-cases/upload-file.use-case';
-import { Profile } from '@prisma/client';
+import { ApiFindProfileSwagger } from '../../../swagger/User/api-find-profile';
+import { ApiCreateAvatarSwagger } from '../../../swagger/User/api-create-avatar';
+import { ApiUpdateProfileSwagger } from '../../../swagger/User/api-update-profile';
 
 @ApiTags('Users')
 @Controller('users')
@@ -42,23 +29,7 @@ export class UsersController {
   constructor(public readonly commandBus: CommandBus) {}
 
   @Put('profile')
-  @ApiOperation({ summary: 'Update current user profile' })
-  @ApiBody({
-    description: 'Example request body (all fields not required)',
-    type: UserProfileDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns updated profile',
-    schema: { example: userProfile },
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Unauthorized',
-  })
-  @ApiBadRequestResponse({
-    description: 'If the inputModel has incorrect values',
-    schema: BadRequestApi,
-  })
+  @ApiUpdateProfileSwagger()
   @UseGuards(JwtAuthGuard)
   async updateProfile(
     @User() user: UserModel,
@@ -68,21 +39,7 @@ export class UsersController {
   }
 
   @Post('avatar')
-  @ApiOperation({
-    summary: 'Upload users avatar',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ schema: fileSchema })
-  @ApiResponse({
-    status: 201,
-    description: 'Return profile photo',
-    schema: { example: userProfilePhoto },
-  })
-  @ApiBadRequestResponse({
-    description: 'If file format is incorrect',
-    schema: BadRequestApi,
-  })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiCreateAvatarSwagger()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadImageForProfile(
@@ -93,15 +50,7 @@ export class UsersController {
   }
 
   @Get('profile')
-  @ApiOperation({ summary: 'Users profile with his information' })
-  @ApiResponse({
-    status: 200,
-    description: 'Successfully return users profile',
-    schema: { example: userProfile },
-  })
-  @ApiUnauthorizedResponse({
-    description: 'Unauthorized',
-  })
+  @ApiFindProfileSwagger()
   @UseGuards(JwtAuthGuard)
   async findProfileByUserId(
     @User() user: UserModel,

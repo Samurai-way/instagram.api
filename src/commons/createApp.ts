@@ -49,7 +49,7 @@ export const createApp = (app: INestApplication): INestApplication => {
         description: 'Enter JWT token',
         in: 'header',
       },
-      'JWT-auth',
+      'JWT-Auth',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);

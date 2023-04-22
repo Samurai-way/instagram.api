@@ -832,7 +832,7 @@ window.onload = function() {
     "servers": [],
     "components": {
       "securitySchemes": {
-        "JWT-auth": {
+        "JWT-Auth": {
           "scheme": "bearer",
           "bearerFormat": "JWT",
           "type": "http",
