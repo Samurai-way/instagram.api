@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { deviceViewModelExample } from '../../../swagger/Device/device=view=model-example';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiDeleteDeviceByIdSwagger } from '../../../swagger/Device/api-delete-device-by-id';
 
 @ApiTags('Devices')
 @Controller('security')
@@ -55,17 +56,7 @@ export class DevicesController {
   }
 
   @Delete('/devices/:deviceId')
-  @ApiOperation({ summary: 'Terminate specified device session' })
-  @ApiParam({ name: 'deviceId', type: 'string' })
-  @ApiResponse({ status: 204, description: 'No Content' })
-  @ApiUnauthorizedResponse({
-    description:
-      'If the JWT refreshToken inside cookie is missing, expired or incorrect',
-  })
-  @ApiForbiddenResponse({
-    description: 'If try to delete the deviceId of other user',
-  })
-  @ApiNotFoundResponse({ description: 'Not Found' })
+  @ApiDeleteDeviceByIdSwagger()
   @HttpCode(204)
   async deleteDevicesByDeviceId(
     @Cookies() cookies,
