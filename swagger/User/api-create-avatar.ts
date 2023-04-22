@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { fileSchema } from './file-schema';
 import { userProfilePhoto } from './user-profile';
-import { BadRequestApi } from '../auth/bad-request-schema-example';
+import { BadRequestApi } from '../Auth/bad-request-schema-example';
 
 export function ApiCreateAvatarSwagger() {
   return applyDecorators(

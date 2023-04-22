@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { UserProfileDto } from '../../src/modules/users/dto/user-profile-dto';
 import { userProfile } from './user-profile';
-import { BadRequestApi } from '../auth/bad-request-schema-example';
+import { BadRequestApi } from '../Auth/bad-request-schema-example';
 
 export function ApiUpdateProfileSwagger() {
   return applyDecorators(
