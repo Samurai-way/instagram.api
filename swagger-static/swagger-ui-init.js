@@ -470,16 +470,6 @@ window.onload = function() {
           "operationId": "AuthController_userPasswordRecovery",
           "summary": "Password recovery via Email confirmation. Email should be sent with RecoveryCode inside",
           "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EmailDto"
-                }
-              }
-            }
-          },
           "responses": {
             "204": {
               "description": "Even if current email is not registered (for prevent user's email detection)"

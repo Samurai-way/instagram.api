@@ -54,6 +54,7 @@ import { EmailConfirmation } from '../../../swagger/User/email-confirmation-mode
 import { GoogleAuthDecorator } from './decorator/google.decorator';
 import { GoogleAuthCommand } from './use-cases/google-auth.use-case';
 import { DeviceInfoDecorator } from './decorator/device-info.decorator';
+import { RecaptchaGuard } from './guards/recaptcha.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -159,7 +160,7 @@ export class AuthController {
     return this.commandBus.execute(new EmailResendingCommand(dto));
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard, RecaptchaGuard)
   @Throttle(5, 10)
   @HttpCode(200)
   @ApiBadRequestResponse({
@@ -168,7 +169,10 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: 'If the password or login is wrong' })
   @ApiOperation({ summary: 'Try login user to the system' })
-  @ApiBody({ description: 'Example request body', type: AuthCredentialsModel })
+  @ApiBody({
+    description: 'Example request body',
+    type: AuthCredentialsModel,
+  })
   @ApiResponse({
     status: 200,
     description:
@@ -227,6 +231,7 @@ export class AuthController {
   }
 
   @Throttle(5, 10)
+  @UseGuards(RecaptchaGuard)
   @Post('/password-recovery')
   @ApiOperation({
     summary:
@@ -243,8 +248,10 @@ export class AuthController {
   })
   @ApiTooManyRequestsResponse({ description: tooManyRequestsMessage })
   @HttpCode(204)
-  async userPasswordRecovery(@Body() dto: EmailDto): Promise<boolean> {
-    return this.commandBus.execute(new PasswordRecoveryCommand(dto));
+  async userPasswordRecovery(@Body() body) {
+    // Promise<boolean> // @Body() dto: EmailDto
+    return true;
+    // return this.commandBus.execute(new PasswordRecoveryCommand(dto));
   }
 
   @Throttle(5, 10)
