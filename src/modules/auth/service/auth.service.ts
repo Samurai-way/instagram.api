@@ -12,11 +12,11 @@ export class AuthService {
     const payload = { userId: userId, deviceId: deviceId };
     return {
       accessToken: this.jwtService.sign(payload, {
-        expiresIn: '5m',
+        expiresIn: '500m',
         secret: JWT.jwt_secret,
       }),
       refreshToken: this.jwtService.sign(payload, {
-        expiresIn: '10m',
+        expiresIn: '10000m',
         secret: JWT.jwt_secret,
       }),
     };
