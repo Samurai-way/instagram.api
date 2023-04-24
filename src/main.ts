@@ -8,7 +8,15 @@ const PORT = process.env.PORT || 3000;
 const serverUrl = 'http://localhost:3000';
 
 async function start(): Promise<void> {
-  const rawApp = await NestFactory.create(AppModule, { cors: true });
+  const rawApp = await NestFactory.create(AppModule, {
+    cors: {
+      origin: [
+        'https://instagram-ui-nine.vercel.app/',
+        'http://localhost:3000',
+      ],
+      credentials: true,
+    },
+  });
   const app = createApp(rawApp);
   await app.listen(PORT, () => {
     console.log(`[nest main] -> server started on http://localhost:${PORT}`);
