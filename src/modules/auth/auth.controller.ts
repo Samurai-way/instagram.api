@@ -109,7 +109,7 @@ export class AuthController {
   }
 
   @Post('/login')
-  @UseGuards(LocalAuthGuard, RecaptchaGuard)
+  @UseGuards(LocalAuthGuard)
   @Throttle(5, 10)
   @HttpCode(200)
   @ApiLoginSwagger()
@@ -151,6 +151,7 @@ export class AuthController {
   }
 
   @Post('/password-recovery')
+  @UseGuards(RecaptchaGuard)
   @Throttle(5, 10)
   @ApiPasswordRecoverySwagger()
   @HttpCode(204)
