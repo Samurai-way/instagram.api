@@ -235,7 +235,7 @@ window.onload = function() {
               }
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -282,7 +282,7 @@ window.onload = function() {
               "description": "If the password or login is wrong"
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -327,7 +327,7 @@ window.onload = function() {
               }
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -372,7 +372,7 @@ window.onload = function() {
               }
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -430,7 +430,7 @@ window.onload = function() {
               "description": "If the password or login is wrong"
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -488,7 +488,7 @@ window.onload = function() {
               "description": "If the inputModel has invalid email (for example 222^gmail.com)"
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [
@@ -522,7 +522,7 @@ window.onload = function() {
               "description": "If user with this code doesnt exist"
             },
             "429": {
-              "description": "More than 5 attempts from one IP-address during 10 seconds"
+              "description": "More than 5 attempts from one IP-address during 10 seconds or recaptcha failed"
             }
           },
           "tags": [

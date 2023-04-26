@@ -22,6 +22,8 @@ export function ApiPasswordRecoverySwagger() {
       description:
         'If the inputModel has invalid email (for example 222^gmail.com)',
     }),
-    ApiTooManyRequestsResponse({ description: tooManyRequestsMessage }),
+    ApiTooManyRequestsResponse({
+      description: tooManyRequestsMessage,
+    }),
   );
 }
