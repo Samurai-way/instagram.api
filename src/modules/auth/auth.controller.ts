@@ -93,7 +93,7 @@ export class AuthController {
   @Post('/registration-confirmation')
   @Throttle(5, 10)
   @ApiRegistrationConfirmationSwagger()
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async registrationConfirmation(
     @Body() dto: ConfirmationCodeDto,
   ): Promise<EmailConfirmation> {
@@ -111,7 +111,7 @@ export class AuthController {
   @Post('/login')
   @UseGuards(LocalAuthGuard)
   @Throttle(5, 10)
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiLoginSwagger()
   async userLogin(
     @User() user: UserModel,
@@ -133,7 +133,7 @@ export class AuthController {
 
   @Post('/refresh-token')
   @ApiRefreshTokenSwagger()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async userRefreshToken(
     @Cookies() cookies,
     @Ip() ip: IpDto,
@@ -154,7 +154,7 @@ export class AuthController {
   @UseGuards(RecaptchaGuard)
   @Throttle(5, 10)
   @ApiPasswordRecoverySwagger()
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async userPasswordRecovery(@Body() dto: EmailDto): Promise<boolean> {
     return this.commandBus.execute(new PasswordRecoveryCommand(dto));
   }
@@ -162,14 +162,14 @@ export class AuthController {
   @Post('/new-password')
   @Throttle(5, 10)
   @ApiNewPasswordSwagger()
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async userNewPassword(@Body() dto: NewPasswordDto) {
     return this.commandBus.execute(new NewPasswordCommand(dto));
   }
 
   @Post('/logout')
   @ApiLogoutSwagger()
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async userLogout(@Cookies() cookies): Promise<boolean> {
     return this.commandBus.execute(new LogoutCommand(cookies.refreshToken));
   }
