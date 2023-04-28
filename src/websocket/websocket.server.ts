@@ -16,9 +16,7 @@ interface IMessage {
 export class SocketServer implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
-
   private numClients = 0;
-
   handleConnection(client: Socket): void {
     this.numClients++;
     this.emitNumClients();

@@ -4,6 +4,7 @@ import { EmailService } from '../../email/email.service';
 import { UsersRepository } from '../../users/repository/users.repository';
 import { randomUUID } from 'crypto';
 import { EmailDto } from '../dto/auth.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class PasswordRecoveryCommand {
@@ -18,7 +19,7 @@ export class PasswordRecoveryUseCase implements ICommandHandler {
   ) {}
 
   async execute(command: PasswordRecoveryCommand): Promise<boolean> {
-    const user: any = await this.usersRepository.findUserByEmail(
+    const user: User = await this.usersRepository.findUserByEmail(
       command.dto.email,
     );
     if (!user)
