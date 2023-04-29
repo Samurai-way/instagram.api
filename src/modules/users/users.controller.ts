@@ -1,10 +1,12 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Post,
   Put,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -23,8 +25,12 @@ import { UploadFileCommand } from './use-cases/upload-file.use-case';
 import { ApiFindProfileSwagger } from '../../../swagger/User/api-find-profile';
 import { ApiCreateAvatarSwagger } from '../../../swagger/User/api-create-avatar';
 import { ApiUpdateProfileSwagger } from '../../../swagger/User/api-update-profile';
-import stripe, { Stripe } from 'stripe';
+import { Stripe } from 'stripe';
 import * as process from 'process';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2022-11-15',
+});
 
 @ApiTags('Users')
 @Controller('users')
@@ -63,12 +69,9 @@ export class UsersController {
 
   @Get('buy')
   async buyItems(@Query('productsIds') productsIds: string) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2022-11-15',
-    });
     const session = await stripe.checkout.sessions.create({
       success_url: 'http://localhost:3000/users/success', // front end url after bue
-      cancel_url: '',
+      cancel_url: 'http://localhost:3000/users/cancel',
       line_items: [
         {
           price_data: {
@@ -83,10 +86,39 @@ export class UsersController {
         },
       ],
       mode: 'payment',
+      client_reference_id: '10',
     });
+    return session;
   }
+
   @Get('success')
   async successPay() {
     return 'Yes, you buy was success';
+  }
+
+  @Get('cancel')
+  async cancelPay() {
+    return 'Bad request :(';
+  }
+
+  @Post('webhook')
+  async webhook(@Body() data, @Req() req: Request) {
+    const signature = req.headers['stripe-signature'];
+    try {
+      const event = stripe.webhooks.constructEvent(
+        data,
+        signature,
+        process.env.SIGNING_SECRET,
+      );
+      console.log(event);
+      if (event.type === 'checkout.session.completed') {
+        // useCase logic
+        console.log('you the best man');
+      }
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException(e.message);
+    }
+    return 'OK';
   }
 }

@@ -57,6 +57,7 @@
     "googleapis": "^118.0.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.0",
+    "localtunnel": "^2.0.2",
     "npm": "^9.6.4",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
