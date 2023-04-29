@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -22,6 +23,8 @@ import { UploadFileCommand } from './use-cases/upload-file.use-case';
 import { ApiFindProfileSwagger } from '../../../swagger/User/api-find-profile';
 import { ApiCreateAvatarSwagger } from '../../../swagger/User/api-create-avatar';
 import { ApiUpdateProfileSwagger } from '../../../swagger/User/api-update-profile';
+import stripe, { Stripe } from 'stripe';
+import * as process from 'process';
 
 @ApiTags('Users')
 @Controller('users')
@@ -56,5 +59,34 @@ export class UsersController {
     @User() user: UserModel,
   ): Promise<UserProfileModel> {
     return this.commandBus.execute(new FindProfileCommand(user.id));
+  }
+
+  @Get('buy')
+  async buyItems(@Query('productsIds') productsIds: string) {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2022-11-15',
+    });
+    const session = await stripe.checkout.sessions.create({
+      success_url: 'http://localhost:3000/users/success', // front end url after bue
+      cancel_url: '',
+      line_items: [
+        {
+          price_data: {
+            product_data: {
+              name: 'Products ids: ' + productsIds,
+              description: 'Best product for happiness',
+            },
+            unit_amount: 100 * 100,
+            currency: 'USD',
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+    });
+  }
+  @Get('success')
+  async successPay() {
+    return 'Yes, you buy was success';
   }
 }
