@@ -107,7 +107,7 @@ export class UsersController {
   async stripeWebhook(
     @Body() data: any,
     @Req() request: RawBodyRequest<Request>,
-  ) {
+  ): Promise<string> {
     const signature = request.headers['stripe-signature'];
     try {
       const event = stripe.webhooks.constructEvent(
@@ -115,10 +115,8 @@ export class UsersController {
         signature,
         process.env.STRIPE_WEBHOOK_SECRET,
       );
-      // console.log(event);
       if (event.type === 'checkout.session.completed') {
         console.log('Payment succeeded');
-        // perform other actions here
       }
       return 'success';
     } catch (error) {
