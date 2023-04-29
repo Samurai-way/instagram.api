@@ -9,6 +9,7 @@ const serverUrl = 'http://localhost:3000';
 
 async function start(): Promise<void> {
   const rawApp = await NestFactory.create(AppModule, {
+    rawBody: true,
     cors: {
       origin: [
         'https://instagram-ui-nine.vercel.app/',

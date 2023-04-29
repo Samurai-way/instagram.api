@@ -778,7 +778,7 @@ window.onload = function() {
       },
       "/users/webhook": {
         "post": {
-          "operationId": "UsersController_webhook",
+          "operationId": "UsersController_stripeWebhook",
           "parameters": [],
           "responses": {
             "201": {

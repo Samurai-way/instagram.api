@@ -6,12 +6,14 @@ import {
   Post,
   Put,
   Query,
+  RawBodyRequest,
   Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserProfileDto } from './dto/user-profile-dto';
 import { CommandBus } from '@nestjs/cqrs';
@@ -102,23 +104,26 @@ export class UsersController {
   }
 
   @Post('webhook')
-  async webhook(@Body() data, @Req() req: Request) {
-    const signature = req.headers['stripe-signature'];
+  async stripeWebhook(
+    @Body() data: any,
+    @Req() request: RawBodyRequest<Request>,
+  ) {
+    const signature = request.headers['stripe-signature'];
     try {
       const event = stripe.webhooks.constructEvent(
-        data,
+        request.rawBody,
         signature,
-        process.env.SIGNING_SECRET,
+        process.env.STRIPE_WEBHOOK_SECRET,
       );
-      console.log(event);
+      // console.log(event);
       if (event.type === 'checkout.session.completed') {
-        // useCase logic
-        console.log('you the best man');
+        console.log('Payment succeeded');
+        // perform other actions here
       }
-    } catch (e) {
-      console.log(e);
-      throw new BadRequestException(e.message);
+      return 'success';
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error.message);
     }
-    return 'OK';
   }
 }
