@@ -72,7 +72,7 @@ export class UsersController {
   async buyItems(@Query('productsIds') productsIds: string) {
     const session = await stripe.checkout.sessions.create({
       success_url: 'http://localhost:3000/users/success', // front end url after bue
-      cancel_url: 'http://localhost:3000/users/cancel',
+      cancel_url: 'http://localhost:3000/users/cancel', // front end url after cancel
       line_items: [
         {
           price_data: {
