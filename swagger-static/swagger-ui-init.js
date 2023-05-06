@@ -725,6 +725,71 @@ window.onload = function() {
           ]
         }
       },
+      "/users/buy": {
+        "get": {
+          "operationId": "UsersController_buyItems",
+          "parameters": [
+            {
+              "name": "productsIds",
+              "required": true,
+              "in": "query",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
+      "/users/success": {
+        "get": {
+          "operationId": "UsersController_successPay",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
+      "/users/cancel": {
+        "get": {
+          "operationId": "UsersController_cancelPay",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
+      "/users/webhook": {
+        "post": {
+          "operationId": "UsersController_stripeWebhook",
+          "parameters": [],
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Users"
+          ]
+        }
+      },
       "/testing/all-data": {
         "delete": {
           "operationId": "TestingController_deleteAllData",
