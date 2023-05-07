@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "instagram.api",
+  "name": "inctagram",
   "builds": [
     {
       "src": "src/main.ts",
